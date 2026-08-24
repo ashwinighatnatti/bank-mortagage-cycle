@@ -7,11 +7,13 @@ on:
     branches: [master]
 
 # Tests mock the Anthropic client (see poc/backend/tests/test_agents.py) — no
-# real Foundry key or network access is needed. FOUNDRY_API_KEY only has to
-# satisfy pydantic-settings' min_length validation, so a dummy value is used
-# below rather than a repo secret.
+# real Foundry key or network access is needed. These only have to satisfy
+# pydantic-settings validation (see app/config.py's Settings), so dummy
+# values are used below rather than repo secrets.
 env:
   FOUNDRY_API_KEY: ci-placeholder-key
+  FOUNDRY_API_ENDPOINT: https://ci-placeholder.services.ai.azure.com/anthropic/
+  JWT_SECRET: ci-placeholder-jwt-secret-value
 
 jobs:
   backend:
