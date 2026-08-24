@@ -1,0 +1,67 @@
+name: Bug report
+description: Something isn't working as expected
+labels: ["bug"]
+body:
+  - type: dropdown
+    id: layer
+    attributes:
+      label: Which layer is this in?
+      options:
+        - Reference design (Coforge AI-Native Mortgage Demo.html) / mvp/
+        - poc/backend
+        - poc/frontend
+        - azure-web-app deployment
+        - .claude/skills/ai-native-mortgage
+        - Repo meta (README, docs, CI)
+        - Not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A clear description of the bug.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect to happen?
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs, output, or screenshots
+      description: >
+        If this involves an agent run, include the audit trail entry or
+        transcript if you can. Do not paste secrets or API keys.
+      render: shell
+
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      placeholder: "e.g. Windows 11, Python 3.11, Node 18, local .venv"
+
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checklist
+      options:
+        - label: I confirmed this isn't caused by a missing/misconfigured `poc/.env` (see poc/.env.example)
+        - label: I searched existing issues and this hasn't been reported

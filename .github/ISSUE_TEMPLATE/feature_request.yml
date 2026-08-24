@@ -1,0 +1,43 @@
+name: Feature request
+description: Suggest an idea or enhancement
+labels: ["enhancement"]
+body:
+  - type: dropdown
+    id: layer
+    attributes:
+      label: Which layer is this for?
+      options:
+        - Reference design (Coforge AI-Native Mortgage Demo.html) / mvp/
+        - poc/backend
+        - poc/frontend
+        - azure-web-app deployment
+        - .claude/skills/ai-native-mortgage
+        - Repo meta (README, docs, CI)
+        - Not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: What's missing or awkward today?
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional context
