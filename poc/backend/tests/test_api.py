@@ -346,7 +346,7 @@ def test_human_and_ai_actions_are_distinguishable_in_the_trail(client, session, 
 def test_site_gate_is_off_by_default(client):
     """Unset in local dev / tests -- must never lock out someone who never
     configured it."""
-    r = client.get("/api/personas")
+    r = client.get("/api/auth/personas")
     assert r.status_code == 200
 
 
@@ -366,7 +366,7 @@ def test_site_gate_when_configured(client, monkeypatch):
     try:
         # No cookie yet: a browser navigation (GET) is sent to the gate page;
         # anything else (an API call) is refused outright.
-        redirected = client.get("/api/personas", follow_redirects=False)
+        redirected = client.get("/api/auth/personas", follow_redirects=False)
         assert redirected.status_code == 303
         assert redirected.headers["location"] == "/gate"
         assert client.post("/api/auth/login", json={}).status_code == 401
@@ -386,7 +386,7 @@ def test_site_gate_when_configured(client, monkeypatch):
         assert right.headers["location"] == "/"
         assert "site_gate" in right.cookies
 
-        assert client.get("/api/personas").status_code == 200
+        assert client.get("/api/auth/personas").status_code == 200
     finally:
         get_settings.cache_clear()
 
