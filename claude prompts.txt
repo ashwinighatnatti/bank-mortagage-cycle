@@ -1,0 +1,3 @@
+
+> explore the HTML application file - Coforge AI-Native Mortgage Demo.html . This is a AI-Native Mortgage solution design . We will be building an agentic solution using this as the reference. Before building the solution a quick MVP solution of this application needs to be designed to showcase the capability. author the skill file keeping this application and MVP solution in focus. Next go ahead with the plan to implement it. We will include agent design, tool design, harness at later stages.
+

@@ -1,0 +1,82 @@
+# RUNTIME dependency lock -- every transitive dependency, pinned exactly.
+#
+# This is what the Dockerfile installs:
+#     pip install --no-deps -r backend/requirements.lock.txt
+#
+# --no-deps is deliberate. The closure below is already complete, so resolution
+# is unnecessary and would only reintroduce the drift this file prevents.
+#
+# Contains NO test tooling -- see requirements-dev.lock.txt.#
+# HOW THIS WAS GENERATED
+#     python -m venv <tmp>
+#     <tmp>/pip install -r backend/requirements.txt
+#     <tmp>/pip freeze > backend/requirements.lock.txt
+# A clean venv, NOT a freeze of the working environment -- that machine has 225+
+# packages installed and almost none of them belong here.
+#
+# VERIFIED. All 214 tests pass against exactly these versions
+# (python 3.14.4, win32, 2026-08-20); scripts/spike_foundry.py passes 7/7 on
+# anthropic==0.125.0.
+#
+# CAVEAT -- resolved on Windows. A few packages are platform-conditional, so the
+# authoritative lock for deployment should be regenerated inside the Linux
+# container at freeze time:
+#     docker run --rm -v "$PWD:/w" -w /w python:3.14-slim sh -c "pip install -q -r backend/requirements.txt && pip freeze" > backend/requirements.lock.txt
+#
+# NOTE FOR WINDOWS. Verifying a lock from a deeply nested directory fails with an
+# OSError partway through installing anthropic, which ships a path long enough to
+# cross the 260-character MAX_PATH limit. The install aborts and leaves packages
+# missing, which looks like an incomplete lock but is not. Verify from a short
+# path. Not an issue in the Linux container.
+#
+# TO CHANGE A VERSION: edit requirements.txt, re-resolve, re-run the tests and the spike,
+# then regenerate this file. Never hand-edit a pin here.
+#
+# 46 packages.
+
+annotated-doc==0.0.5
+annotated-types==0.8.0
+anthropic==0.125.0
+anyio==4.14.2
+bcrypt==5.0.0
+certifi==2026.7.22
+cffi==2.1.1
+charset-normalizer==3.5.1
+click==8.4.2
+colorama==0.4.6 ; sys_platform == "win32"
+cryptography==50.0.0
+distro==1.9.0
+docstring_parser==0.18.0
+ecdsa==0.19.2
+fastapi==0.141.1
+greenlet==3.5.5
+h11==0.16.0
+httpcore==1.0.9
+httptools==0.8.0
+httpx==0.28.1
+idna==3.19
+jiter==0.16.0
+pillow==12.3.0
+pyasn1==0.6.4
+pycparser==3.0
+pydantic==2.13.4
+pydantic-settings==2.15.0
+pydantic_core==2.46.4
+pypdf==6.16.1
+python-dotenv==1.2.3
+python-jose==3.5.0
+python-multipart==0.0.32
+PyYAML==6.0.3
+reportlab==5.0.0
+rsa==4.9.1
+six==1.17.0
+sniffio==1.3.1
+SQLAlchemy==2.0.52
+sqlmodel==0.0.39
+sse-starlette==3.4.8
+starlette==1.6.0
+typing-inspection==0.4.4
+typing_extensions==4.16.0
+uvicorn==0.52.4
+watchfiles==1.2.0
+websockets==17.0.1

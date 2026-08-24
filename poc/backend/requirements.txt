@@ -1,0 +1,43 @@
+# RUNTIME dependencies — what ships in the container.
+#
+# Test and tooling packages live in requirements-dev.txt so they stay out of the
+# image. pytest alone drags in pluggy and iniconfig; keeping them here would put
+# a test framework in production for no reason.
+#
+# This file declares INTENT (ranges). requirements.lock.txt records what was
+# actually installed and verified. Install from the lock — see the README.
+
+# --- Claude on Microsoft Foundry -------------------------------------------
+# Pinned exactly, not >=. The spike verifies seven Foundry capabilities this
+# build depends on, and it verified them against THIS version. A >= range means
+# the Docker image installs whatever is current on build day, so the container
+# would run an SDK nobody tested. Re-run scripts/spike_foundry.py before moving
+# this number.
+anthropic==0.125.0
+
+# --- API layer --------------------------------------------------------------
+fastapi>=0.115.0
+uvicorn[standard]>=0.32.0
+sse-starlette>=2.1.3            # the live agent log is server-sent events
+python-multipart>=0.0.12        # form uploads
+
+# --- Persistence ------------------------------------------------------------
+sqlmodel>=0.0.22
+pydantic>=2.9.0
+pydantic-settings>=2.6.0
+
+# --- Auth -------------------------------------------------------------------
+python-jose[cryptography]>=3.3.0
+# bcrypt directly rather than passlib. passlib's last release was 2020 and its
+# backend-detection probe hashes an over-length secret, which bcrypt 5.x rejects
+# instead of truncating -- every hash call raises. Pinning bcrypt below 5 would
+# also work, at the cost of shipping an unmaintained library to make two calls.
+bcrypt>=4.0.0
+
+# --- Document rendering -----------------------------------------------------
+# DECLARED BUT NOT YET IMPORTED. Intended for the underwriter summary PDF. They
+# are not free: reportlab pulls pillow, which is a large wheel and a recurring
+# source of CVE advisories. If the PDF feature does not land, delete both lines
+# and regenerate the lock rather than shipping them unused.
+reportlab>=4.2.0
+pypdf>=5.1.0

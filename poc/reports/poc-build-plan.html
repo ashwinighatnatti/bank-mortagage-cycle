@@ -1,0 +1,945 @@
+<title>Mortgage POC Build Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<style>
+:root{
+  --paper:#F1F3F7; --surface:#FFFFFF; --surface-2:#E7EBF2; --surface-3:#DAE0EA;
+  --ink:#121722; --ink-2:#3A4459; --ink-3:#6B7689;
+  --rule:#D8DEE9; --rule-2:#BCC5D4;
+  --accent:#4338CA; --accent-soft:#EAE8FB;
+  --read:#1D6D8C;  --read-soft:#E2F0F6;
+  --write:#9A6516; --write-soft:#F9EFDC;
+  --gated:#B3352C; --gated-soft:#FAE9E7;
+  --ok:#166E52;    --ok-soft:#E3F2EC;
+  --code-bg:#141A26; --code-ink:#D6DEEC; --code-dim:#7B8AA3;
+  --shadow:0 1px 2px rgba(18,23,34,.05),0 10px 26px -14px rgba(18,23,34,.18);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#0A0E16; --surface:#121824; --surface-2:#19212F; --surface-3:#212B3C;
+    --ink:#E8ECF4; --ink-2:#AFB9CA; --ink-3:#7C8798;
+    --rule:#232D3E; --rule-2:#334054;
+    --accent:#9A8FFF; --accent-soft:#1C1A3A;
+    --read:#57B6D6;  --read-soft:#0C242E;
+    --write:#DFA84E; --write-soft:#2A2010;
+    --gated:#F2776A; --gated-soft:#2E1512;
+    --ok:#4CBE95;    --ok-soft:#0C2820;
+    --code-bg:#080C14; --code-ink:#D6DEEC; --code-dim:#6B7A93;
+    --shadow:0 1px 2px rgba(0,0,0,.5),0 10px 26px -14px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0A0E16; --surface:#121824; --surface-2:#19212F; --surface-3:#212B3C;
+  --ink:#E8ECF4; --ink-2:#AFB9CA; --ink-3:#7C8798;
+  --rule:#232D3E; --rule-2:#334054;
+  --accent:#9A8FFF; --accent-soft:#1C1A3A;
+  --read:#57B6D6;  --read-soft:#0C242E;
+  --write:#DFA84E; --write-soft:#2A2010;
+  --gated:#F2776A; --gated-soft:#2E1512;
+  --ok:#4CBE95;    --ok-soft:#0C2820;
+  --code-bg:#080C14; --code-ink:#D6DEEC; --code-dim:#6B7A93;
+  --shadow:0 1px 2px rgba(0,0,0,.5),0 10px 26px -14px rgba(0,0,0,.7);
+}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink-2);
+  font-family:'IBM Plex Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  font-size:16px;line-height:1.62;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:'Archivo',system-ui,sans-serif;color:var(--ink);
+  text-wrap:balance;line-height:1.15;margin:0;font-weight:700;letter-spacing:-.015em}
+code,kbd,.mono{font-family:'IBM Plex Mono',ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.wrap{max-width:1220px;margin:0 auto;padding:0 26px 110px;display:grid;grid-template-columns:1fr;gap:0}
+@media (min-width:1080px){.wrap{grid-template-columns:206px minmax(0,1fr);gap:52px;padding-right:36px}}
+.rail{display:none}
+@media (min-width:1080px){.rail{display:block;position:sticky;top:0;align-self:start;height:100vh;padding-top:104px;overflow-y:auto}}
+.rail ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:1px}
+.rail a{display:flex;gap:10px;text-decoration:none;color:var(--ink-3);font-size:13px;
+  line-height:1.35;padding:6px 9px;border-radius:4px;transition:.15s}
+.rail a:hover{color:var(--ink);background:var(--surface-2)}
+.rail .n{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--rule-2);padding-top:2px;flex:none}
+.col{max-width:74ch;min-width:0}
+
+.mast{padding:66px 0 34px;border-bottom:3px solid var(--ink);margin-bottom:40px}
+.kicker{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.15em;
+  text-transform:uppercase;color:var(--accent);font-weight:600;margin:0 0 18px}
+.mast h1{font-size:clamp(34px,5.4vw,54px);font-weight:800}
+.standfirst{font-size:18px;line-height:1.55;color:var(--ink-2);margin:20px 0 0;max-width:62ch}
+.specs{margin-top:24px;display:flex;flex-wrap:wrap;gap:8px}
+.spec{font-family:'IBM Plex Mono',monospace;font-size:11.5px;background:var(--surface);
+  border:1px solid var(--rule);border-radius:4px;padding:4px 9px;color:var(--ink-2)}
+
+section{margin:0 0 62px;scroll-margin-top:24px}
+.snum{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--ink-3);display:flex;align-items:center;gap:12px;margin-bottom:13px}
+.snum::after{content:'';height:1px;background:var(--rule);flex:1}
+section>h2{font-size:clamp(25px,3.2vw,31px);margin-bottom:16px}
+h3{font-size:19px;margin:34px 0 11px}
+h4{font-size:15.5px;font-family:'IBM Plex Sans',sans-serif;font-weight:600;color:var(--ink);margin:24px 0 7px}
+p{margin:0 0 15px}
+strong{color:var(--ink);font-weight:600}
+ul,ol{margin:0 0 17px;padding-left:21px}
+li{margin-bottom:7px}
+li::marker{color:var(--rule-2)}
+
+.tag{display:inline-flex;align-items:center;gap:5px;font-family:'IBM Plex Mono',monospace;
+  font-size:11px;font-weight:500;padding:2px 7px;border-radius:3px;white-space:nowrap;vertical-align:1px}
+.tag.r{background:var(--read-soft);color:var(--read)}
+.tag.w{background:var(--write-soft);color:var(--write)}
+.tag.g{background:var(--gated-soft);color:var(--gated)}
+.tag.o{background:var(--ok-soft);color:var(--ok)}
+.tag.a{background:var(--accent-soft);color:var(--accent)}
+.tag.n{background:var(--surface-2);color:var(--ink-3)}
+
+.note{background:var(--surface);border:1px solid var(--rule);border-left:3px solid var(--accent);
+  border-radius:0 5px 5px 0;padding:17px 21px;margin:24px 0;box-shadow:var(--shadow)}
+.note.stop{border-left-color:var(--gated);background:var(--gated-soft);border-color:transparent}
+.note.stop .nt{color:var(--gated)}
+.note .nt{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:8px;font-weight:600}
+.note p:last-child{margin-bottom:0}
+
+.breakout{margin:28px 0}
+@media (min-width:1080px){.breakout{width:min(calc(100vw - 330px),1010px)}}
+
+pre{background:var(--code-bg);color:var(--code-ink);border-radius:7px;padding:17px 19px;
+  overflow-x:auto;font-family:'IBM Plex Mono',monospace;font-size:12.8px;line-height:1.62;
+  margin:18px 0;border:1px solid var(--rule)}
+pre .c{color:var(--code-dim)}
+pre .k{color:#9A8FFF}
+pre .s{color:#7FD6A8}
+pre b{color:#FFC46B;font-weight:500}
+p code,li code,td code{background:var(--surface-2);color:var(--ink);border-radius:3px;
+  padding:1px 5px;font-size:.88em}
+
+.tw{overflow-x:auto;border:1px solid var(--rule);border-radius:6px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:13.6px}
+th{text-align:left;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.09em;
+  text-transform:uppercase;color:var(--ink-3);font-weight:600;padding:10px 13px;
+  background:var(--surface-2);border-bottom:1px solid var(--rule);white-space:nowrap}
+td{padding:10px 13px;border-bottom:1px solid var(--rule);vertical-align:top;color:var(--ink-2)}
+tr:last-child td{border-bottom:0}
+td b{color:var(--ink);font-weight:600}
+td.mono{font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--ink);white-space:nowrap}
+
+.arch{background:var(--surface);border:1px solid var(--rule);border-radius:7px;padding:20px;
+  box-shadow:var(--shadow);font-family:'IBM Plex Mono',monospace;font-size:12.5px;
+  line-height:1.75;overflow-x:auto;color:var(--ink-2);white-space:pre}
+
+.defs{border-top:1px solid var(--rule);margin:20px 0}
+.def{display:grid;gap:2px 20px;padding:14px 0;border-bottom:1px solid var(--rule)}
+@media (min-width:640px){.def{grid-template-columns:210px minmax(0,1fr)}}
+.def dt{font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--ink);font-weight:500;padding-top:2px}
+.def dd{margin:0;font-size:14.8px;line-height:1.6}
+
+.phases{margin:22px 0;border-left:2px solid var(--rule)}
+.phase{position:relative;padding:0 0 24px 24px}
+.phase:last-child{padding-bottom:0}
+.phase::before{content:'';position:absolute;left:-6px;top:6px;width:10px;height:10px;border-radius:50%;
+  background:var(--paper);border:2px solid var(--rule-2)}
+.phase.key::before{background:var(--accent);border-color:var(--accent)}
+.phase .pn{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3)}
+.phase .pt{font-family:'Archivo',sans-serif;font-size:17px;color:var(--ink);font-weight:700;margin:2px 0 4px}
+.phase p{font-size:14.2px;margin:0}
+
+footer{border-top:3px solid var(--ink);margin-top:16px;padding-top:22px;
+  font-family:'IBM Plex Mono',monospace;font-size:11.5px;color:var(--ink-3);
+  display:flex;flex-wrap:wrap;gap:8px 22px}
+</style>
+
+<div class="wrap">
+
+<nav class="rail" aria-label="Contents">
+  <ol>
+    <li><a href="#s0"><span class="n">00</span><span>Three findings first</span></a></li>
+    <li><a href="#s1"><span class="n">01</span><span>Scope of the POC</span></a></li>
+    <li><a href="#s2"><span class="n">02</span><span>Architecture</span></a></li>
+    <li><a href="#s3"><span class="n">03</span><span>Agents</span></a></li>
+    <li><a href="#s4"><span class="n">04</span><span>Tools</span></a></li>
+    <li><a href="#s5"><span class="n">05</span><span>Constraints</span></a></li>
+    <li><a href="#s5b"><span class="n">5b</span><span>Loops &amp; correction</span></a></li>
+    <li><a href="#s6"><span class="n">06</span><span>Memory &amp; context</span></a></li>
+    <li><a href="#s7"><span class="n">07</span><span>Security</span></a></li>
+    <li><a href="#s8"><span class="n">08</span><span>Synthetic data</span></a></li>
+    <li><a href="#s9"><span class="n">09</span><span>Docker &amp; Azure</span></a></li>
+    <li><a href="#s10"><span class="n">10</span><span>Build sequence</span></a></li>
+  </ol>
+</nav>
+
+<main class="col">
+
+<header class="mast">
+  <p class="kicker">Implementation plan</p>
+  <h1>Mortgage POC Build Plan</h1>
+  <p class="standfirst">Turning the AI-Native Mortgage design into a working system — React,
+  FastAPI, SQLite, and Claude Opus 4.7 on Microsoft Foundry — with real agents, gated tools,
+  enforced constraints, memory and an auditable trail.</p>
+  <div class="specs">
+    <span class="spec">React 18 + Vite</span>
+    <span class="spec">FastAPI + SQLModel</span>
+    <span class="spec">SQLite</span>
+    <span class="spec">claude-opus-4-7</span>
+    <span class="spec">Microsoft Foundry</span>
+    <span class="spec">Docker → Azure Web App</span>
+  </div>
+</header>
+
+<!-- ============ 0 ============ -->
+<section id="s0">
+  <div class="snum">Part 00</div>
+  <h2>Three findings that shape the plan</h2>
+
+  <div class="note stop">
+    <div class="nt">Managed Agents is not available on Microsoft Foundry</div>
+    <p>Anthropic's server-managed agent runtime — where Anthropic hosts the agent loop and a
+    per-session sandbox — <strong>does not run on Foundry</strong>. Neither do Message Batches or
+    the Models API.</p>
+    <p>So the agent loop is ours to own: <strong>Claude API + tool use, hosted in our FastAPI
+    container.</strong> That is genuinely the better fit here anyway — we need every tool call
+    intercepted, gated and written to an audit table, and a self-hosted loop gives us that
+    chokepoint. But it does mean the loop, the retries and the state persistence are code we
+    write, not a platform feature we configure.</p>
+  </div>
+
+  <h4>Several features are beta on Foundry — verify before designing around them</h4>
+  <p>Messages, streaming and tool use are GA on Foundry. These are <span class="tag n">beta</span>
+  there: structured outputs / strict tool use, adaptive thinking and effort, prompt caching, the
+  memory tool, the 1M context window, and the Files API. They are all in the plan below, but
+  <strong>day one is a spike that confirms which betas your Foundry deployment actually
+  accepts</strong> — the fallbacks are noted where it matters.</p>
+
+  <h4>Claude Opus 4.7 has a different request shape than you may expect</h4>
+  <p><code>claude-opus-4-7</code> is correct and current — 1M context, $5/$25 per million tokens,
+  billed through Microsoft Marketplace at standard rates. Three API details will bite otherwise:</p>
+  <ul>
+    <li><code>budget_tokens</code> is <strong>removed</strong> — sending it returns a 400. Use
+      <code>thinking={"type": "adaptive"}</code> and control depth with
+      <code>output_config={"effort": …}</code>.</li>
+    <li>Omitting <code>thinking</code> entirely means the model runs <strong>without</strong>
+      thinking on 4.7. It must be set explicitly.</li>
+    <li><strong>Assistant prefill returns a 400.</strong> Shape output with structured outputs or
+      the system prompt instead.</li>
+  </ul>
+</section>
+
+<!-- ============ 1 ============ -->
+<section id="s1">
+  <div class="snum">Part 01</div>
+  <h2>What the POC does, and what it deliberately does not</h2>
+
+  <p>The slice worth building is the one where a model does real work. That is
+  <strong>intake → validation → exception with a real confidence score → disposition → queue →
+  underwriter decision</strong>. Everything else is scaffolding around that.</p>
+
+  <div class="tw breakout">
+    <table>
+      <thead><tr><th>In the POC</th><th>Out of the POC</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Real document classification and field extraction from synthetic PDFs</td>
+          <td>Closing &amp; Funding, Post-Closing QC screens</td>
+        </tr>
+        <tr>
+          <td>Model-generated exceptions with genuine, calibratable confidence</td>
+          <td>Any integration with a real loan origination system</td>
+        </tr>
+        <tr>
+          <td>Deterministic disposition policy, HITL queues, supervisor sign-off</td>
+          <td>Real vendor ordering, real borrower email</td>
+        </tr>
+        <tr>
+          <td>Underwriters' Hub with model-written document summaries</td>
+          <td>Multi-tenancy, SSO, production identity</td>
+        </tr>
+        <tr>
+          <td>Hash-chained audit trail, live SSE agent log</td>
+          <td>Fair-lending monitoring, model risk governance</td>
+        </tr>
+        <tr>
+          <td>Tool gating, constraint enforcement, per-run budgets</td>
+          <td>Horizontal scale — one container, one worker</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>The demo story stays identical to the MVP, so nobody has to relearn it. The difference is
+  that the exceptions are now <em>discovered</em> rather than seeded — and you can prove it by
+  dropping a new synthetic loan into the system live and watching the agents find things nobody
+  wrote down in advance. <strong>That is the moment worth engineering for.</strong></p>
+</section>
+
+<!-- ============ 2 ============ -->
+<section id="s2">
+  <div class="snum">Part 02</div>
+  <h2>Architecture</h2>
+
+  <div class="breakout">
+    <div class="arch">┌─────────────────────────────────────────────────────────────┐
+│  React 18 + Vite  (the MVP's six screens, ported)           │
+│  fetch  →  /api/*          EventSource  →  /api/runs/{id}/events
+└──────────────────────────┬──────────────────────────────────┘
+                           │  served as static files by FastAPI
+┌──────────────────────────▼──────────────────────────────────┐
+│  FastAPI                                                    │
+│                                                             │
+│   routes/         thin — auth, validation, no logic          │
+│   orchestrator/   run lifecycle, stage sequencing, SSE bus   │
+│   agents/         4 LLM agents + 3 deterministic             │
+│   tools/          registry · JSON schemas · handlers         │
+│   gate.py         ◀── EVERY tool call passes through here    │
+│   policy.py       disposition thresholds, invariants         │
+│   audit.py        append-only, hash-chained                  │
+│   llm.py          AnthropicFoundry client, caching, retries  │
+└───────┬──────────────────────────────────┬──────────────────┘
+        │                                  │
+┌───────▼────────────┐         ┌───────────▼──────────────────┐
+│  SQLite (SQLModel) │         │  Microsoft Foundry           │
+│  loans exceptions  │         │  claude-opus-4-7             │
+│  runs  turns  docs │         │  1M ctx · adaptive thinking  │
+│  approvals  audit  │         └──────────────────────────────┘
+│  memory_notes      │
+└────────────────────┘</div>
+  </div>
+
+  <h3>Why these choices</h3>
+  <dl class="defs">
+    <div class="def"><dt>FastAPI</dt><dd>Async, and Pydantic-native — the same Pydantic models
+      define the API schema <em>and</em> the model's structured output schema. One definition of
+      an <code>Exception</code>, used in three places. Server-Sent Events give the live agent log
+      that makes the demo land.</dd></div>
+    <div class="def"><dt>SQLModel</dt><dd>SQLAlchemy + Pydantic in one class. Avoids maintaining
+      ORM models and API schemas separately in a POC.</dd></div>
+    <div class="def"><dt>SQLite, container-local</dt><dd>See the note below — this is a decision,
+      not a default.</dd></div>
+    <div class="def"><dt>One container</dt><dd>FastAPI serves the built React bundle as static
+      files. A single image, a single Azure Web App, no CORS, no separate frontend deploy.</dd></div>
+  </dl>
+
+  <div class="note">
+    <div class="nt">SQLite on Azure App Service — do not put it in /home</div>
+    <p>App Service's persistent <code>/home</code> is an SMB-mounted Azure Files share. SQLite's
+    locking behaves badly over SMB and will produce intermittent <code>database is locked</code>
+    errors under any concurrency.</p>
+    <p><strong>Put the database on the container's local disk and seed it at startup.</strong> For
+    a demo this is not a compromise, it is a feature: every container restart is a guaranteed-clean
+    demo, and the <em>Reset Demo</em> button just re-runs the seeder. Treat the data as ephemeral
+    by design, and say so. When the POC graduates, swap SQLModel's connection string for Azure
+    Database for PostgreSQL — that is a one-line change plus a migration.</p>
+  </div>
+
+  <h3>Data model</h3>
+  <p>The MVP's shapes carry over unchanged — do not renegotiate the vocabulary — plus four new
+  tables the real system needs:</p>
+  <ul>
+    <li><code>documents</code> — synthetic PDFs per loan, with extracted fields and per-field
+      confidence.</li>
+    <li><code>runs</code> and <code>turns</code> — every agent invocation, its messages, token
+      usage, latency and cost. This is what makes the loop resumable and the spend visible.</li>
+    <li><code>audit</code> — append-only, each row carrying a SHA-256 of the previous row.</li>
+    <li><code>memory_notes</code> — cross-run operational memory (Part 06).</li>
+  </ul>
+</section>
+
+<!-- ============ 3 ============ -->
+<section id="s3">
+  <div class="snum">Part 03</div>
+  <h2>Agents</h2>
+
+  <p class="lede">Seven named agents in the design. <strong>Only four of them should call a
+  model.</strong> Using an LLM where arithmetic will do is the most common way a POC like this
+  becomes slow, expensive and non-deterministic for no benefit.</p>
+
+  <div class="tw breakout">
+    <table>
+      <thead><tr><th>Agent</th><th>Kind</th><th>What it does</th><th>Effort</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">Document Intake</td><td><span class="tag a">LLM</span></td>
+          <td>Classifies each document, extracts typed fields, returns a per-field confidence</td>
+          <td class="mono">high</td></tr>
+        <tr><td class="mono">Validation</td><td><span class="tag a">LLM</span> + rules</td>
+          <td>Runs the deterministic rules engine, then reasons over what the rules could not settle — reconciling income across three documents, judging whether a deposit is sourced</td>
+          <td class="mono">high</td></tr>
+        <tr><td class="mono">Processing</td><td><span class="tag a">LLM</span></td>
+          <td>Plans and executes the repair for an auto-lane exception</td>
+          <td class="mono">medium</td></tr>
+        <tr><td class="mono">Hub Summarizer</td><td><span class="tag a">LLM</span></td>
+          <td>Writes the income / credit / collateral summaries for the underwriter, with citations back to source documents</td>
+          <td class="mono">medium</td></tr>
+        <tr><td class="mono">Risk / AUS Scoring</td><td><span class="tag o">code</span></td>
+          <td>DTI, LTV, program caps, AUS finding. Pure arithmetic — a model here adds latency and removes reproducibility</td><td>—</td></tr>
+        <tr><td class="mono">Workflow Orchestration</td><td><span class="tag o">code</span></td>
+          <td>Routes to a queue by exception type and current load. A lookup and a sort</td><td>—</td></tr>
+        <tr><td class="mono">Supervisor</td><td><span class="tag o">code</span></td>
+          <td>Sequences stages, evaluates readiness, opens and closes runs</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>The agent loop</h3>
+  <p>Use the SDK's <strong>tool runner</strong> rather than hand-writing the loop, and get the
+  audit chokepoint by wrapping each tool function rather than by owning the loop.</p>
+
+  <div class="breakout">
+<pre><span class="c"># app/llm.py</span>
+<span class="k">from</span> anthropic <span class="k">import</span> AnthropicFoundry
+
+client = AnthropicFoundry(
+    api_key=settings.foundry_api_key,      <span class="c"># from Key Vault, never in the image</span>
+    resource=settings.foundry_resource,
+)
+
+MODEL = <span class="s">"claude-opus-4-7"</span>      <span class="c"># exact ID — never append a date suffix</span></pre>
+
+<pre><span class="c"># app/agents/validation.py</span>
+<span class="k">from</span> anthropic <span class="k">import</span> beta_tool
+
+<span class="k">def</span> <b>run_validation_agent</b>(loan_id: str, run_id: str) -&gt; list[ExceptionDraft]:
+    runner = client.beta.messages.tool_runner(
+        model=MODEL,
+        max_tokens=<span class="s">16000</span>,
+        <b>thinking</b>={<span class="s">"type"</span>: <span class="s">"adaptive"</span>},        <span class="c"># explicit — 4.7 does not think by default</span>
+        <b>output_config</b>={<span class="s">"effort"</span>: <span class="s">"high"</span>},      <span class="c"># judgment work deserves it</span>
+        <b>cache_control</b>={<span class="s">"type"</span>: <span class="s">"ephemeral"</span>},   <span class="c"># caches the guideline pack</span>
+        system=build_system_prompt(<span class="s">"validation"</span>),
+        tools=[t.fn <span class="k">for</span> t <span class="k">in</span> TOOLS.for_agent(<span class="s">"validation"</span>)],
+        messages=[{<span class="s">"role"</span>: <span class="s">"user"</span>, <span class="s">"content"</span>: build_context_pack(loan_id)}],
+    )
+
+    <span class="k">for</span> message <span class="k">in</span> runner:
+        <span class="k">if</span> message.stop_reason == <span class="s">"refusal"</span>:      <span class="c"># guard before reading content</span>
+            audit.record_refusal(run_id, message.stop_details)
+            <span class="k">break</span>
+        persist_turn(run_id, message)                 <span class="c"># tokens, latency, cost</span>
+        <span class="k">if</span> budget.exceeded(run_id):
+            <span class="k">raise</span> BudgetExceeded(run_id)</pre>
+  </div>
+
+  <div class="note">
+    <div class="nt">Where the confidence score comes from</div>
+    <p>The model does <strong>not</strong> choose the disposition. It returns a finding with a
+    <code>confidence</code> and a <code>severity</code> and its evidence; a deterministic policy
+    function maps those to <code>auto</code> or <code>hitl</code>. That separation is what makes
+    the threshold auditable, tunable and testable without touching a prompt — and it is exactly the
+    knob that decides whether this system is safe. Keep it in code, in one file, under test.</p>
+  </div>
+
+  <h3>Structured output for findings</h3>
+  <p>One Pydantic model, used as the API schema, the ORM row and the model's output format:</p>
+
+  <div class="breakout">
+<pre><span class="k">class</span> <b>ExceptionDraft</b>(BaseModel):
+    loan_id: str
+    stage: Literal[<span class="s">0</span>, <span class="s">1</span>, <span class="s">2</span>]
+    type: str
+    severity: Literal[<span class="s">"Low"</span>, <span class="s">"Medium"</span>, <span class="s">"High"</span>, <span class="s">"Critical"</span>]
+    confidence: int = Field(ge=<span class="s">0</span>, le=<span class="s">100</span>)
+    rationale: str                     <span class="c"># why it was flagged</span>
+    evidence_snapshot: str             <span class="c"># the quoted source data</span>
+    evidence_doc_id: str | None        <span class="c"># traceable back to a document</span>
+    recommended_action: str
+
+response = client.messages.<b>parse</b>(
+    model=MODEL, max_tokens=<span class="s">16000</span>,
+    thinking={<span class="s">"type"</span>: <span class="s">"adaptive"</span>},
+    messages=[...],
+    <b>output_format</b>=ExceptionFindings,       <span class="c"># a list[ExceptionDraft] wrapper</span>
+)
+findings = response.<b>parsed_output</b>            <span class="c"># validated, typed</span></pre>
+  </div>
+
+  <p>Structured outputs are beta on Foundry. If your deployment rejects them, the fallback is a
+  <code>raise_exception</code> tool with <code>strict: true</code> and
+  <code>additionalProperties: false</code> — same schema guarantee, reached a different way, and
+  arguably better here since it puts findings through the same gate as every other write.</p>
+</section>
+
+<!-- ============ 4 ============ -->
+<section id="s4">
+  <div class="snum">Part 04</div>
+  <h2>Tools</h2>
+
+  <p>Twelve tools, each a typed function with a JSON schema. The colour is the security posture:
+  <span class="tag r">read</span> cannot change anything,
+  <span class="tag w">write</span> mutates our own state,
+  <span class="tag g">gated</span> costs money or contacts a human and requires explicit
+  confirmation.</p>
+
+  <div class="tw breakout">
+    <table>
+      <thead><tr><th>Tool</th><th></th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">list_documents</td><td><span class="tag r">read</span></td><td>Documents on file for a loan, with type and page count</td></tr>
+        <tr><td class="mono">read_document</td><td><span class="tag r">read</span></td><td>Full text of one document, delimited as untrusted data</td></tr>
+        <tr><td class="mono">get_loan</td><td><span class="tag r">read</span></td><td>Loan header — borrowers, program, amount, FICO, DTI, LTV</td></tr>
+        <tr><td class="mono">get_extracted_fields</td><td><span class="tag r">read</span></td><td>Previously extracted fields with confidences</td></tr>
+        <tr><td class="mono">evaluate_rule</td><td><span class="tag r">read</span></td><td>Runs one deterministic rule and returns pass / fail / indeterminate</td></tr>
+        <tr><td class="mono">lookup_guideline</td><td><span class="tag r">read</span></td><td>Retrieves the guideline passage for a program and topic</td></tr>
+        <tr><td class="mono">recall_notes</td><td><span class="tag r">read</span></td><td>Operational memory relevant to this exception type (Part 06)</td></tr>
+        <tr><td class="mono">record_extraction</td><td><span class="tag w">write</span></td><td>Persists an extracted field with its confidence and source location</td></tr>
+        <tr><td class="mono">raise_exception</td><td><span class="tag w">write</span></td><td>Emits a finding. The agent's primary output</td></tr>
+        <tr><td class="mono">apply_auto_repair</td><td><span class="tag w">write</span></td><td>Executes a repair. Gate rejects it unless policy says the exception is auto-lane</td></tr>
+        <tr><td class="mono">order_vendor_service</td><td><span class="tag g">gated</span></td><td>Title, appraisal, flood, credit. Spends money — needs confirmation</td></tr>
+        <tr><td class="mono">request_borrower_document</td><td><span class="tag g">gated</span></td><td>Contacts a borrower. Irreversible — needs confirmation</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Note what is <em>not</em> here: no bash, no filesystem, no shell. The design brief calls for a
+  narrow, typed surface precisely so the harness can intercept, gate and audit every action. A bash
+  tool would hand the gate an opaque string and there would be nothing left to enforce.</p>
+
+  <div class="breakout">
+<pre><span class="c"># app/tools/registry.py — one decorator carries policy + audit</span>
+
+<span class="k">def</span> <b>tool</b>(name, posture, agents, gated=False):
+    <span class="k">def</span> wrap(fn):
+        @beta_tool
+        @functools.wraps(fn)
+        <span class="k">def</span> inner(**kwargs):
+            ctx = current_run.get()
+            <b>gate.check</b>(name, posture, agents, gated, kwargs, ctx)   <span class="c"># raises ToolDenied</span>
+            <b>audit.tool_call</b>(ctx.run_id, ctx.agent, name, kwargs)
+            <span class="k">try</span>:
+                result = fn(**kwargs)
+            <span class="k">except</span> Exception <span class="k">as</span> e:
+                audit.tool_error(ctx.run_id, name, e)
+                <span class="k">return</span> {<span class="s">"error"</span>: str(e), <span class="s">"is_error"</span>: <span class="k">True</span>}
+            <b>policy.assert_invariants</b>(ctx)          <span class="c"># post-condition check</span>
+            audit.tool_result(ctx.run_id, name, result)
+            <span class="k">return</span> result
+        TOOLS.register(name, inner, posture, agents)
+        <span class="k">return</span> inner
+    <span class="k">return</span> wrap
+
+
+@tool(<span class="s">"apply_auto_repair"</span>, posture=<span class="s">"write"</span>, agents=[<span class="s">"processing"</span>])
+<span class="k">def</span> <b>apply_auto_repair</b>(exception_id: str, action: str, evidence: str) -&gt; dict:
+    <span class="s">"""Execute the recommended repair for an auto-lane exception.
+
+    Args:
+        exception_id: The exception to repair.
+        action: The repair to perform, from the exception's recommended_action.
+        evidence: What changed, quoted, for the audit trail.
+    """</span>
+    ...</pre>
+  </div>
+
+  <p>A denied tool returns a <code>tool_result</code> with <code>is_error: true</code> and a
+  sentence explaining the refusal — never a silent drop. The model reads the refusal and adapts,
+  which is the behaviour you want and also makes the gate visible in the transcript.</p>
+</section>
+
+<!-- ============ 5 ============ -->
+<section id="s5">
+  <div class="snum">Part 05</div>
+  <h2>Constraints</h2>
+
+  <p>Four independent layers. Each catches what the one above it cannot.</p>
+
+  <h4>1 · Schema — the model cannot express an invalid finding</h4>
+  <p><code>strict: true</code> with <code>additionalProperties: false</code>, plus Pydantic
+  validation on the way in. A severity outside the enum or a confidence of 140 never reaches the
+  database.</p>
+
+  <h4>2 · Capability — which agent may call which tool</h4>
+  <p>A static matrix in <code>gate.py</code>. The Validation Agent can raise an exception but
+  cannot repair one. The Processing Agent can repair but cannot raise. The Hub Summarizer has
+  read-only tools and nothing else. This is the same principle the MVP already enforces in its
+  state layer — <strong>the tool refuses, not the interface</strong> — and it is the primary
+  defence against a prompt-injected document talking an agent into an action.</p>
+
+  <h4>3 · Policy — the disposition rule and its invariants</h4>
+  <div class="breakout">
+<pre><span class="c"># app/policy.py — the whole safety posture, in one testable file</span>
+
+AUTO_THRESHOLD = {                      <span class="c"># per exception type, not one global number</span>
+    <span class="s">"missing_document"</span>:       <span class="s">88</span>,
+    <span class="s">"low_confidence_ocr"</span>:     <span class="s">85</span>,
+    <span class="s">"flood_determination"</span>:    <span class="s">90</span>,
+}
+NEVER_AUTO = {<span class="s">"income_variance"</span>, <span class="s">"dti_breach"</span>, <span class="s">"title_exception"</span>,
+              <span class="s">"identity_mismatch"</span>, <span class="s">"appraisal_variance"</span>, <span class="s">"undisclosed_debt"</span>}
+
+<span class="k">def</span> <b>decide_disposition</b>(f: ExceptionDraft) -&gt; Disposition:
+    <span class="k">if</span> f.severity == <span class="s">"Critical"</span>:            <span class="k">return</span> HITL(requires_sup=<span class="k">True</span>)
+    <span class="k">if</span> f.type <span class="k">in</span> NEVER_AUTO:               <span class="k">return</span> HITL(requires_sup=is_breach(f))
+    <span class="k">if</span> f.confidence &gt;= AUTO_THRESHOLD.get(f.type, <span class="s">101</span>):  <span class="k">return</span> AUTO
+    <span class="k">return</span> HITL()                        <span class="c"># unknown type defaults to a human</span></pre>
+  </div>
+  <p>Three properties worth keeping: an unknown exception type <strong>defaults to a human</strong>
+  (the <code>101</code> sentinel makes that structural rather than accidental); Critical is never
+  automatic regardless of confidence; and thresholds are per-type, because "88% sure a document is
+  missing" and "88% sure this income is fine" are not the same claim.</p>
+
+  <p>Invariants re-checked after every write, rolling back on violation: an agent may never set
+  an exception to <code>resolved</code> if <code>requires_sup</code>; a loan may not be
+  <code>ready</code> while a gating exception is open; every exception must carry evidence
+  traceable to a document.</p>
+
+  <h4>4 · Budget — the run cannot run away</h4>
+  <p>Per run: max tool calls (30), max tokens (150k), wall-clock (120s), and a dollar ceiling
+  computed from Opus 4.7's $5/$25 rates. Breaching any of them fails the run cleanly and writes an
+  audit line, rather than quietly costing money. Surface spend per loan in the UI — clients ask,
+  and having the answer on screen is unreasonably persuasive.</p>
+</section>
+
+<!-- ============ 5b ============ -->
+<section id="s5b">
+  <div class="snum">Part 05b</div>
+  <h2>Loops, and where self-correction belongs</h2>
+
+  <p class="lede">There are four loops in this system and only one of them is driven by a model.
+  Keeping that clear is what makes the behaviour reproducible and the audit trail meaningful.</p>
+
+  <div class="tw breakout">
+    <table>
+      <thead><tr><th>Loop</th><th>Driven by</th><th>Bounded by</th></tr></thead>
+      <tbody>
+        <tr><td><b>Tool use</b> (inner)</td><td><span class="tag a">Claude</span> calls a tool, reads the result, decides the next call, until <code>end_turn</code></td><td class="mono">30 calls / 150k tok / 120s / $1.50</td></tr>
+        <tr><td><b>Stage orchestration</b></td><td><span class="tag o">Python</span> — <code>for stage in 0..2: for loan in loans:</code></td><td>Fixed by the business process</td></tr>
+        <tr><td><b>Human in the loop</b></td><td><span class="tag w">People</span>, asynchronously across requests and days</td><td>Not a process loop at all</td></tr>
+        <tr><td><b>Transport retry</b></td><td><span class="tag n">SDK</span>, on 429 / 5xx</td><td>2 retries, exponential backoff</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p><strong>The model never decides what happens next at the macro level.</strong> It does not
+  plan the pipeline, pick which loan to work, or judge when a stage is finished. Mortgage
+  origination has a known sequence, so autonomy is confined to <em>within</em> a stage — "how do I
+  investigate this loan's income?" — never "what should the system do now?" An agent that re-plans
+  the process on each run is a system you cannot test.</p>
+
+  <div class="note">
+    <div class="nt">A trap, if you later add web search</div>
+    <p>The Python tool runner <strong>does not auto-resume a <code>pause_turn</code></strong> — it
+    exits silently and hands back a truncated answer with no error raised. That only happens with
+    <em>server-side</em> tools. Every tool in this plan is client-side, so it cannot occur today.
+    Add web search for guideline lookup and it becomes real, and needs the mirror-history,
+    restart-the-runner pattern.</p>
+  </div>
+
+  <h3>Self-correction: skip the reflection pass</h3>
+  <p>A generic "review your answer and revise it" step is not worth having here. Models are
+  unreliable judges of their own output, it doubles cost and latency, and it introduces drift —
+  the model talking itself out of a correct finding. Three mechanisms already in the design are
+  strictly better:</p>
+
+  <dl class="defs">
+    <div class="def"><dt>Deterministic verification</dt>
+      <dd>Do not ask the model to check its arithmetic — compute DTI in Python. Do not ask "are you
+      sure that document is missing?" — query the table. Anything code can verify, code verifies.
+      That is grounding, not reflection.</dd></div>
+    <div class="def"><dt>Evidence binding</dt>
+      <dd>Every finding cites a document id and a quoted span; a validator confirms the quote
+      actually appears in that document. Hallucinated findings are rejected mechanically, with no
+      second model call and no judgement involved.</dd></div>
+    <div class="def"><dt>The HITL lane</dt>
+      <dd>Low confidence routes to a person. That <em>is</em> the correction loop, and a human
+      correcting the machine is auditable in a way self-critique never is.</dd></div>
+  </dl>
+
+  <h4>Where bounded correction does earn its place</h4>
+  <ul>
+    <li><strong>Tool-error feedback.</strong> A denied or failed tool returns
+      <code>is_error: true</code> with a reason, and the model adapts. This is self-correction of
+      the useful kind — driven by a real signal rather than introspection.</li>
+    <li><strong>Validator-driven repair.</strong> When the evidence validator rejects a finding,
+      feed the rejection back <em>once</em>. Then fail the finding.</li>
+    <li><strong>Re-extraction on low confidence.</strong> Re-read with <em>different input</em> —
+      higher resolution, or cross-referenced against a second document. A retry with new evidence,
+      not "think harder about the same thing." It mirrors the design's own
+      <em>Re-OCR at 300dpi</em> exception.</li>
+  </ul>
+
+  <div class="note stop">
+    <div class="nt">The rule that keeps the threshold meaningful</div>
+    <p><strong>Confidence may never be revised upward, and no correction may move a finding from
+    HITL to auto.</strong> Confidence is the number the entire safety threshold rests on. If a
+    second pass could move a finding from 62% to 89%, the gate would be decorative and the auto
+    lane would silently widen. First-pass confidence is the ceiling; deterministic checks may only
+    lower it. Enforced in <code>policy.revise_confidence()</code> and
+    <code>policy.revise_disposition()</code>, both of which raise rather than clamp — a silent
+    clamp would hide the bug that caused it.</p>
+  </div>
+
+  <p>The correction that actually compounds is <strong>offline</strong>: <code>ground_truth.json</code>
+  lets you tune thresholds, revise prompts and retire bad exception types <em>between</em> runs.
+  That improvement is measurable. A runtime critique pass is not.</p>
+</section>
+
+<!-- ============ 6 ============ -->
+<section id="s6">
+  <div class="snum">Part 06</div>
+  <h2>Memory and context</h2>
+
+  <h3>Context assembly</h3>
+  <p>Every request is built by one <code>build_context_pack()</code> function, in strict cache
+  order — <strong>tools → system → messages, most stable first</strong>:</p>
+  <ol>
+    <li>Tool definitions — deterministic order, never sorted differently between runs.</li>
+    <li>System prompt — the agent's role, its constraints, its output contract. Frozen.</li>
+    <li>The guideline pack for the loan's program — large, identical across every loan of that
+      program. <strong>This is the cache win.</strong></li>
+    <li><em>Cache breakpoint here.</em></li>
+    <li>Loan snapshot, extracted fields so far, recalled notes — volatile, after the breakpoint.</li>
+  </ol>
+  <p>Verify it is working by asserting <code>usage.cache_read_input_tokens &gt; 0</code> on the
+  second and later loans in a run. If it is zero, something volatile has crept above the
+  breakpoint — a timestamp in the system prompt is the classic culprit. Make that assertion a test,
+  not a hope.</p>
+
+  <h3>Two kinds of memory, deliberately separated</h3>
+  <dl class="defs">
+    <div class="def"><dt>Case memory<br><span class="tag o">SQLite</span></dt>
+      <dd>What we know about <em>this loan</em> — extracted fields, findings, resolutions, who did
+      what. Structured rows, not files: queryable, joinable, auditable, and it is the same data the
+      UI renders. Loaded into the context pack as a compact JSON block.</dd></div>
+    <div class="def"><dt>Operational memory<br><span class="tag a">memory tool</span></dt>
+      <dd>What we have learned <em>across loans</em> — "flood-zone mismatches from this vendor
+      resolve on re-pull in 94% of cases", "this employer's paystubs put YTD in an unusual field".
+      Rule-shaped generalisations that make the next run better. This is where Anthropic's
+      <code>memory_20250818</code> tool fits, with the model reading and writing its own notes.</dd></div>
+  </dl>
+
+  <div class="note stop">
+    <div class="nt">The memory rule that must not be broken</div>
+    <p><strong>No borrower data in operational memory. Ever.</strong> Memory files persist outside
+    the loan record, outside its retention policy, and outside the audit trail that governs it. A
+    note saying <em>"employer Acme reports YTD in box 14"</em> is a useful generalisation. A note
+    saying <em>"David Chen's paystub shows $6,520/mo"</em> is an uncontrolled copy of financial PII.</p>
+    <p>Enforce it, do not document it: run a PII detector in the memory write handler and reject
+    anything containing a name, an account number, an SSN pattern or a specific dollar figure tied
+    to a person. The memory tool is client-side — the handler is ours, so the check is ours to make.</p>
+  </div>
+
+  <h3>Long conversations</h3>
+  <p>Each agent run here is short — five to ten tool calls — so neither compaction nor context
+  editing is needed at POC scale. If the Validation Agent ends up reading many long documents in
+  one run, reach for <strong>context editing</strong> first
+  (<code>clear_tool_uses_20250919</code>, beta <code>context-management-2025-06-27</code>), which
+  prunes stale tool results without summarising anything away. Both are beta on Foundry — check
+  before relying on them.</p>
+</section>
+
+<!-- ============ 7 ============ -->
+<section id="s7">
+  <div class="snum">Part 07</div>
+  <h2>Security</h2>
+
+  <h4>Secrets</h4>
+  <p>The Foundry key lives in Azure Key Vault, surfaced to the app as a Key Vault reference in App
+  Service settings (<code>@Microsoft.KeyVault(SecretUri=…)</code>) and read by the container's
+  system-assigned managed identity. It is never in the image, never in the repo, never in an
+  environment variable committed anywhere. Verify by grepping the built image.</p>
+
+  <h4>Prompt injection — the documents are hostile input</h4>
+  <p>A synthetic PDF is a benign stand-in for a document a borrower uploads, which in production is
+  attacker-controlled. Three defences, in order of how much they actually matter:</p>
+  <ol>
+    <li><strong>The capability matrix.</strong> If an injected instruction persuades the Validation
+      Agent to call <code>apply_auto_repair</code>, the gate denies it — that agent does not have
+      that tool. This is the defence that works; the other two are hygiene.</li>
+    <li><strong>Delimiting.</strong> Document text is wrapped and labelled as untrusted data with
+      an explicit instruction that content inside is never an instruction.</li>
+    <li><strong>Output validation.</strong> Every finding must cite a document id and a quoted
+      span; a finding that cannot be traced back to source text is rejected before it is stored.</li>
+  </ol>
+
+  <h4>Identity and authorisation</h4>
+  <p>Five demo personas behind a signed JWT. Every endpoint re-checks the role server-side — the
+  same rule the MVP already follows, now across an HTTP boundary where it actually matters. The
+  React app hides controls for convenience; the API refuses for correctness.</p>
+
+  <h4>Tamper-evident audit</h4>
+  <p>Each audit row stores <code>hash = sha256(prev_hash ‖ canonical_json(row))</code>. A
+  <code>/api/audit/verify</code> endpoint walks the chain and reports the first break. Cheap to
+  build, and it turns "we log everything" into something a compliance reviewer can check in front
+  of you — which is a materially different conversation.</p>
+
+  <h4>Container and transport</h4>
+  <p>Non-root user in the image, HTTPS-only enforced on the Web App, no inbound except 443, request
+  size caps on upload endpoints, and per-persona rate limits so a demo cannot accidentally spend
+  the month's token budget.</p>
+
+  <h4>Data</h4>
+  <p>Synthetic data only — no real borrower ever touches this POC. That is not a limitation to
+  apologise for; it is the control that makes everything above sufficient at this stage.</p>
+</section>
+
+<!-- ============ 8 ============ -->
+<section id="s8">
+  <div class="snum">Part 08</div>
+  <h2>Synthetic data</h2>
+
+  <p>I will research current market conditions and generate the dataset from them, so the numbers
+  survive contact with someone who knows the industry. What I need to look up:</p>
+  <ul>
+    <li>Current conforming loan limit and FHA county limits — these set what counts as Jumbo, and
+      getting them wrong is the first thing a mortgage person notices.</li>
+    <li>Prevailing 30-year fixed, FHA and VA rates.</li>
+    <li>Regional median prices for the metros in the book, so loan amounts are plausible against
+      the property.</li>
+    <li>Realistic FICO, DTI and LTV distributions by program.</li>
+    <li>Observed frequencies of common exception types, so the auto/HITL mix is not invented.</li>
+  </ul>
+
+  <p>Then a generator produces, for each of ~12 loans:</p>
+  <ul>
+    <li>A loan header consistent with its program's real limits.</li>
+    <li><strong>Actual documents as PDFs</strong> — 1003, W-2, paystubs, bank statements, credit
+      report, appraisal, title commitment — with the numbers internally consistent, because the
+      Validation Agent's whole job is finding where they are not.</li>
+    <li><strong>Planted defects</strong> the agents must discover, not be told about: an income
+      figure that does not reconcile, a DTI that breaches its program cap, a deposit with no
+      payroll trail, a lien on a title commitment.</li>
+    <li>A <code>ground_truth.json</code> that never enters a prompt and exists only to score the
+      agents — recall against planted defects, precision against invented ones, and per-type
+      confidence calibration. <strong>This is what turns the demo into an evaluation harness</strong>,
+      and it costs almost nothing to produce alongside the data.</li>
+  </ul>
+
+  <p>Some documents should be scanned-looking rather than clean digital PDFs, or the intake agent's
+  confidence scores will all sit at 0.99 and the auto/HITL split will never be exercised.</p>
+</section>
+
+<!-- ============ 9 ============ -->
+<section id="s9">
+  <div class="snum">Part 09</div>
+  <h2>Docker and Azure</h2>
+
+  <div class="breakout">
+<pre><span class="c"># Dockerfile — multi-stage, one image, no build tools in the runtime layer</span>
+
+<span class="k">FROM</span> node:20-alpine <span class="k">AS</span> web
+WORKDIR /web
+COPY frontend/package*.json ./
+RUN npm ci
+COPY frontend/ ./
+RUN npm run build                        <span class="c"># → /web/dist</span>
+
+<span class="k">FROM</span> python:3.12-slim
+ENV PYTHONUNBUFFERED=1 PIP_NO_CACHE_DIR=1
+WORKDIR /app
+COPY backend/requirements.txt .
+RUN pip install -r requirements.txt
+COPY backend/ ./
+COPY --from=web /web/dist ./static       <span class="c"># FastAPI serves these</span>
+
+RUN useradd -m -u 10001 app && chown -R app:app /app
+USER app                                 <span class="c"># never root</span>
+
+EXPOSE 8000
+HEALTHCHECK CMD python -c "import urllib.request;urllib.request.urlopen('http://localhost:8000/healthz')"
+CMD ["uvicorn","app.main:app","--host","0.0.0.0","--port","8000","--workers","1"]</pre>
+  </div>
+
+  <p><code>--workers 1</code> is deliberate: one worker keeps SQLite writes serialised and the SSE
+  event bus in a single process. Correct for a POC; the thing to revisit when it grows up.</p>
+
+  <div class="breakout">
+<pre><span class="c"># Deploy</span>
+az acr build --registry &lt;acr&gt; --image mortgage-poc:v1 .
+
+az webapp create --name mortgage-poc --plan &lt;plan&gt; --resource-group &lt;rg&gt; \
+  --deployment-container-image-name &lt;acr&gt;.azurecr.io/mortgage-poc:v1
+
+az webapp identity assign --name mortgage-poc --resource-group &lt;rg&gt;
+<span class="c"># then grant that identity 'Key Vault Secrets User' on the vault</span>
+
+az webapp config appsettings set --name mortgage-poc --resource-group &lt;rg&gt; --settings \
+  <b>WEBSITES_PORT</b>=8000 \
+  FOUNDRY_RESOURCE=&lt;your-foundry-resource&gt; \
+  MODEL_ID=claude-opus-4-7 \
+  FOUNDRY_API_KEY=<span class="s">"@Microsoft.KeyVault(SecretUri=https://&lt;vault&gt;.vault.azure.net/secrets/foundry-key/)"</span></pre>
+  </div>
+
+  <p><code>WEBSITES_PORT</code> is the one setting people forget; without it App Service probes the
+  wrong port and the container looks broken. Use a Linux B1 plan or better — the free tier's cold
+  starts will ruin a live demo. Enable <em>Always On</em> for the same reason.</p>
+</section>
+
+<!-- ============ 10 ============ -->
+<section id="s10">
+  <div class="snum">Part 10</div>
+  <h2>Build sequence</h2>
+
+  <div class="phases">
+    <div class="phase key">
+      <div class="pn">Step 1 · half a day</div>
+      <div class="pt">Foundry spike — before anything else</div>
+      <p>One script, one loan, one real call. Confirm the key works, <code>claude-opus-4-7</code>
+      resolves, and — critically — which betas your deployment accepts: structured outputs, prompt
+      caching, adaptive thinking, the memory tool. Everything downstream assumes an answer here, so
+      get it before writing the architecture around a guess.</p>
+    </div>
+    <div class="phase">
+      <div class="pn">Step 2</div>
+      <div class="pt">Synthetic data with ground truth</div>
+      <p>Market research, then the generator, then the PDFs and <code>ground_truth.json</code>.
+      Doing this early means every later step has something real to run against.</p>
+    </div>
+    <div class="phase">
+      <div class="pn">Step 3</div>
+      <div class="pt">Backend skeleton</div>
+      <p>FastAPI, SQLModel, the schema, the seeder, the audit chain, and the deterministic pieces —
+      rules engine, DTI/LTV, routing, readiness. No model calls yet. The MVP's logic ports almost
+      directly.</p>
+    </div>
+    <div class="phase key">
+      <div class="pn">Step 4</div>
+      <div class="pt">Tools, gate, policy</div>
+      <p>The twelve tools, the capability matrix, the disposition function, the invariants, the
+      budgets. <strong>Written before the agents</strong>, and tested without a model in the loop —
+      the gate must be provably correct before anything autonomous is pointed at it.</p>
+    </div>
+    <div class="phase">
+      <div class="pn">Step 5</div>
+      <div class="pt">The four LLM agents</div>
+      <p>Intake first (most visible payoff), then Validation, then Processing, then the Hub
+      Summarizer. Score each against ground truth as it lands.</p>
+    </div>
+    <div class="phase">
+      <div class="pn">Step 6</div>
+      <div class="pt">React port + SSE</div>
+      <p>The MVP's six screens against the real API, with the live agent log driven by
+      Server-Sent Events instead of a timer. The design work is done — this is wiring.</p>
+    </div>
+    <div class="phase">
+      <div class="pn">Step 7</div>
+      <div class="pt">Evaluation pass</div>
+      <p>Recall, precision and confidence calibration per exception type against ground truth. Tune
+      <code>AUTO_THRESHOLD</code> on evidence. This is the step that separates a demo from a
+      credible POC — and the artefact clients' risk teams will actually ask for.</p>
+    </div>
+    <div class="phase">
+      <div class="pn">Step 8</div>
+      <div class="pt">Containerise and deploy</div>
+      <p>Dockerfile, ACR, Web App, Key Vault, health check, a rehearsed demo run on the deployed
+      URL rather than on a laptop.</p>
+    </div>
+  </div>
+
+  <div class="note">
+    <div class="nt">The one thing to get right</div>
+    <p>Steps 4 and 7 are what make this a POC rather than a prettier demo. The gate proves the
+    system cannot do what it should not; the evaluation proves it does what it claims. Both are
+    unglamorous, and both are what a client's risk function will ask about within ten minutes of
+    being impressed by the interface.</p>
+  </div>
+</section>
+
+<footer>
+  <span>Implementation plan</span>
+  <span>Coforge AI-Native Mortgage POC</span>
+  <span>claude-opus-4-7 · Microsoft Foundry</span>
+</footer>
+
+</main>
+</div>

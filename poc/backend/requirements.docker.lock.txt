@@ -1,0 +1,86 @@
+# LINUX RUNTIME dependency lock -- what the Docker image actually installs.
+#
+# `backend/requirements.lock.txt` was resolved on Windows (see its own header)
+# and explicitly documents that "the authoritative lock for deployment should
+# be regenerated inside the Linux container at freeze time." This file is that
+# regeneration, produced with the exact command it prescribes:
+#
+#     docker run --rm -v "$PWD:/w" -w /w python:3.14-slim sh -c \
+#       "pip install -q -r backend/requirements.txt && pip freeze" \
+#       > backend/requirements.docker.lock.txt
+#
+# The Dockerfile installs from this file, not from requirements.lock.txt --
+# `pip install --no-deps -r backend/requirements.docker.lock.txt`.
+#
+# WHY A SEPARATE FILE, NOT AN OVERWRITE. requirements.lock.txt is what local
+# Windows dev environments and CI on Windows install from; overwriting it here
+# would silently drop `colorama` (Windows-only, harmless to lose on Linux, not
+# harmless to lose on Windows) for every contributor who has never touched
+# Docker. Two lock files, one per platform that actually runs the app, mirrors
+# the existing requirements.lock.txt / requirements-dev.lock.txt split.
+#
+# DIFFERENCES FROM requirements.lock.txt (both are correct for their platform):
+#   - colorama is absent: it carries `; sys_platform == "win32"` and never
+#     installs on Linux.
+#   - uvloop==0.22.1 is present: a POSIX-only high-performance event loop that
+#     uvicorn's standard extras pull in only on Linux/macOS.
+#   - reportlab==5.0.1 vs 5.0.0: an independent resolution difference between
+#     the two freeze runs, not a platform marker -- both are valid pins.
+#
+# VERIFIED. Installs cleanly with `pip install --no-deps` in python:3.14-slim
+# (2026-08-21). Not yet re-run against the full test suite inside the
+# container -- do that before treating this as equally proven as the Windows
+# lock's "214 tests pass" claim.
+#
+# TO CHANGE A VERSION: edit backend/requirements.txt, re-resolve on Windows
+# into requirements.lock.txt as usual, then regenerate this file with the
+# command above. Never hand-edit a pin here.
+#
+# 46 packages.
+
+annotated-doc==0.0.5
+annotated-types==0.8.0
+anthropic==0.125.0
+anyio==4.14.2
+bcrypt==5.0.0
+certifi==2026.7.22
+cffi==2.1.1
+charset-normalizer==3.5.1
+click==8.4.2
+cryptography==50.0.0
+distro==1.9.0
+docstring_parser==0.18.0
+ecdsa==0.19.2
+fastapi==0.141.1
+greenlet==3.5.5
+h11==0.16.0
+httpcore==1.0.9
+httptools==0.8.0
+httpx==0.28.1
+idna==3.19
+jiter==0.16.0
+pillow==12.3.0
+pyasn1==0.6.4
+pycparser==3.0
+pydantic==2.13.4
+pydantic-settings==2.15.0
+pydantic_core==2.46.4
+pypdf==6.16.1
+python-dotenv==1.2.3
+python-jose==3.5.0
+python-multipart==0.0.32
+PyYAML==6.0.3
+reportlab==5.0.1
+rsa==4.9.1
+six==1.17.0
+sniffio==1.3.1
+SQLAlchemy==2.0.52
+sqlmodel==0.0.39
+sse-starlette==3.4.8
+starlette==1.6.0
+typing-inspection==0.4.4
+typing_extensions==4.16.0
+uvicorn==0.52.4
+uvloop==0.22.1
+watchfiles==1.2.0
+websockets==17.0.1

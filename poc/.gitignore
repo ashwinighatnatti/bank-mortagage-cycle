@@ -1,0 +1,33 @@
+# secrets — never commit
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+secrets/
+
+# python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+
+# data (synthetic, but regenerable — and keeps ground truth out of prompts by accident)
+# Matched anywhere, not just under backend/data: DATABASE_URL is configurable,
+# so the database file is not guaranteed to land where the default puts it, and
+# it holds loan data plus the audit chain.
+*.db
+*.db-wal
+*.db-shm
+*.db.*.bak
+backend/data/documents/
+
+# node
+node_modules/
+frontend/dist/
+
+# os
+.DS_Store
+Thumbs.db

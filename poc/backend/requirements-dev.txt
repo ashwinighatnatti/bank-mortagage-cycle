@@ -1,0 +1,12 @@
+# DEVELOPMENT dependencies — test and tooling only. Never installed in the image.
+#
+#     pip install -r backend/requirements-dev.txt
+#
+# Includes everything in requirements.txt, so one command gives a full working
+# environment. The Dockerfile installs requirements.lock.txt instead, which is
+# resolved from requirements.txt alone and therefore contains none of this.
+
+-r requirements.txt
+
+pytest>=8.3.0
+httpx>=0.27.0           # FastAPI TestClient; also a transitive dep of anthropic

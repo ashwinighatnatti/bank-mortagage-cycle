@@ -1,0 +1,755 @@
+<title>AI-Native Mortgage Architecture</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Mulish:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+
+<style>
+/* ---------------------------------------------------------------------------
+   Tokens. The project already has a design system — the Coforge brand tokens
+   the reference design and the React app are both built on. This document is
+   about that system, so it wears it: coral primary, teal secondary, navy ink,
+   Poppins / Mulish / JetBrains Mono. The greys are navy-biased, not neutral.
+   --------------------------------------------------------------------------- */
+:root {
+  --coral: #D84B34;
+  --coral-soft: #FDEDE9;
+  --teal: #157F6A;
+  --teal-soft: #E4F2EE;
+  --amber: #B4610F;
+  --amber-soft: #FDF0E4;
+  --danger: #C0271D;
+  --danger-soft: #FBE9E7;
+
+  --ink: #0A2140;
+  --ink-2: #2A3D5C;
+  --ink-3: #64748E;
+  --ink-4: #8E9AB2;
+
+  --ground: #FAFBFD;
+  --surface: #FFFFFF;
+  --surface-2: #F2F5FA;
+  --line: #DFE5EF;
+  --line-strong: #C3CDDE;
+
+  --shadow: 0 1px 2px rgba(10,33,64,.05), 0 4px 14px rgba(10,33,64,.05);
+
+  --display: "Poppins", system-ui, sans-serif;
+  --body: "Mulish", system-ui, -apple-system, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, Menlo, monospace;
+
+  --measure: 68ch;
+  --pad: clamp(20px, 4vw, 56px);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --coral: #F58A72;
+    --coral-soft: #3A1D16;
+    --teal: #4FBFA3;
+    --teal-soft: #10312A;
+    --amber: #E9A45F;
+    --amber-soft: #38240F;
+    --danger: #F0796B;
+    --danger-soft: #3B1714;
+
+    --ink: #E8EDF7;
+    --ink-2: #C3CDDE;
+    --ink-3: #93A0B8;
+    --ink-4: #6E7C96;
+
+    --ground: #080F1C;
+    --surface: #101A2C;
+    --surface-2: #16223A;
+    --line: #24314B;
+    --line-strong: #33415E;
+
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 6px 20px rgba(0,0,0,.3);
+  }
+}
+:root[data-theme="dark"] {
+  --coral: #F58A72;
+  --coral-soft: #3A1D16;
+  --teal: #4FBFA3;
+  --teal-soft: #10312A;
+  --amber: #E9A45F;
+  --amber-soft: #38240F;
+  --danger: #F0796B;
+  --danger-soft: #3B1714;
+
+  --ink: #E8EDF7;
+  --ink-2: #C3CDDE;
+  --ink-3: #93A0B8;
+  --ink-4: #6E7C96;
+
+  --ground: #080F1C;
+  --surface: #101A2C;
+  --surface-2: #16223A;
+  --line: #24314B;
+  --line-strong: #33415E;
+
+  --shadow: 0 1px 2px rgba(0,0,0,.4), 0 6px 20px rgba(0,0,0,.3);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 15.5px;
+  line-height: 1.62;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4 { font-family: var(--display); margin: 0; text-wrap: balance; letter-spacing: -.015em; }
+p { margin: 0; max-width: var(--measure); }
+code, .mono { font-family: var(--mono); font-size: .855em; }
+a { color: var(--coral); }
+
+/* --------------------------------------------------------------- masthead */
+.masthead {
+  border-bottom: 1px solid var(--line);
+  background: var(--surface);
+  padding: clamp(38px, 7vw, 76px) var(--pad) clamp(30px, 4vw, 44px);
+}
+.masthead-inner { max-width: 1180px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px; }
+.eyebrow {
+  font-family: var(--mono); font-size: 11.5px; font-weight: 600;
+  letter-spacing: .14em; text-transform: uppercase; color: var(--coral);
+  display: flex; align-items: center; gap: 10px;
+}
+.eyebrow::before { content: ""; width: 26px; height: 2px; background: var(--coral); }
+.masthead h1 { font-size: clamp(30px, 5.2vw, 50px); line-height: 1.05; font-weight: 700; }
+.masthead .lede { font-size: clamp(16px, 1.6vw, 18.5px); color: var(--ink-2); max-width: 62ch; }
+
+.figures { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+.figure {
+  border: 1px solid var(--line); border-radius: 10px; background: var(--ground);
+  padding: 9px 15px; display: flex; flex-direction: column; gap: 1px; min-width: 96px;
+}
+.figure b { font-family: var(--display); font-size: 21px; font-weight: 700; font-variant-numeric: tabular-nums; line-height: 1.1; }
+.figure span { font-size: 11.5px; color: var(--ink-3); letter-spacing: .02em; }
+
+/* ------------------------------------------------------------------ shell */
+.shell { max-width: 1180px; margin: 0 auto; padding: 0 var(--pad) 90px; display: grid; gap: 44px; }
+@media (min-width: 1080px) {
+  .shell { grid-template-columns: 194px minmax(0, 1fr); gap: 52px; align-items: start; padding-top: 44px; }
+  .toc { position: sticky; top: 28px; }
+}
+@media (max-width: 1079px) { .shell { padding-top: 34px; } .toc { display: none; } }
+
+.toc nav { display: flex; flex-direction: column; gap: 1px; }
+.toc a {
+  font-size: 13px; color: var(--ink-3); text-decoration: none;
+  padding: 5px 10px; border-radius: 7px; border-left: 2px solid transparent;
+}
+.toc a:hover { color: var(--ink); background: var(--surface-2); border-left-color: var(--coral); }
+.toc a:focus-visible { outline: 2px solid var(--coral); outline-offset: 1px; }
+.toc .toc-head {
+  font-family: var(--mono); font-size: 10.5px; letter-spacing: .13em;
+  text-transform: uppercase; color: var(--ink-4); padding: 0 10px 8px;
+}
+
+.body { display: flex; flex-direction: column; gap: 54px; min-width: 0; }
+
+/* --------------------------------------------------------------- sections */
+section { display: flex; flex-direction: column; gap: 18px; scroll-margin-top: 22px; }
+.sec-head { display: flex; flex-direction: column; gap: 7px; border-top: 2px solid var(--ink); padding-top: 14px; }
+.sec-num {
+  font-family: var(--mono); font-size: 11px; font-weight: 600; letter-spacing: .12em;
+  color: var(--ink-4); text-transform: uppercase;
+}
+.sec-head h2 { font-size: clamp(21px, 2.6vw, 27px); font-weight: 600; }
+.sec-head p { color: var(--ink-2); }
+
+h3 { font-size: 16px; font-weight: 600; margin-top: 8px; }
+h4 { font-size: 13px; font-weight: 600; color: var(--ink-2); }
+
+/* ----------------------------------------------------------------- tables */
+.scroller { overflow-x: auto; border: 1px solid var(--line); border-radius: 12px; background: var(--surface); box-shadow: var(--shadow); }
+table { border-collapse: collapse; width: 100%; font-size: 13.5px; min-width: 520px; }
+thead th {
+  text-align: left; font-family: var(--mono); font-size: 10.5px; font-weight: 600;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3);
+  padding: 11px 14px; border-bottom: 1px solid var(--line-strong); white-space: nowrap;
+  background: var(--surface-2);
+}
+tbody td { padding: 10px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+tbody tr:last-child td { border-bottom: 0; }
+td.mono, th.mono { font-family: var(--mono); font-size: 12.5px; white-space: nowrap; }
+td.num { font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+tbody tr:hover { background: var(--surface-2); }
+
+/* ------------------------------------------------------------------ chips */
+.chip {
+  display: inline-flex; align-items: center; gap: 5px; border-radius: 999px;
+  padding: 1px 9px; font-size: 11px; font-weight: 700; font-family: var(--body);
+  letter-spacing: .015em; white-space: nowrap; border: 1px solid transparent;
+}
+.chip.read  { background: var(--teal-soft);  color: var(--teal);  border-color: color-mix(in srgb, var(--teal) 26%, transparent); }
+.chip.write { background: var(--amber-soft); color: var(--amber); border-color: color-mix(in srgb, var(--amber) 26%, transparent); }
+.chip.gated { background: var(--danger-soft); color: var(--danger); border-color: color-mix(in srgb, var(--danger) 26%, transparent); }
+.chip.neutral { background: var(--surface-2); color: var(--ink-3); border-color: var(--line); }
+
+/* ------------------------------------------------------------------ cards */
+.cards { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(255px, 1fr)); }
+.card {
+  border: 1px solid var(--line); border-radius: 12px; background: var(--surface);
+  padding: 16px 17px; display: flex; flex-direction: column; gap: 7px; box-shadow: var(--shadow);
+}
+.card h4 { font-family: var(--display); font-size: 14.5px; color: var(--ink); }
+.card p { font-size: 13.5px; color: var(--ink-2); }
+.card .k { font-family: var(--mono); font-size: 11px; color: var(--ink-4); letter-spacing: .05em; text-transform: uppercase; }
+
+/* --------------------------------------------------------------- callouts */
+.note {
+  border-left: 3px solid var(--coral); background: var(--coral-soft);
+  padding: 13px 17px; border-radius: 0 10px 10px 0;
+}
+.note p { font-size: 14px; color: var(--ink-2); max-width: 64ch; }
+.note strong { color: var(--ink); }
+
+/* ------------------------------------------------------------ layer stack */
+.layers { display: flex; flex-direction: column; gap: 8px; }
+.layer {
+  display: grid; grid-template-columns: 30px minmax(0,1fr); gap: 15px; align-items: start;
+  border: 1px solid var(--line); border-left: 3px solid var(--teal);
+  border-radius: 0 11px 11px 0; background: var(--surface); padding: 13px 16px;
+}
+.layer .n {
+  font-family: var(--mono); font-size: 13px; font-weight: 600; color: var(--teal);
+  font-variant-numeric: tabular-nums; padding-top: 1px;
+}
+.layer h4 { font-family: var(--display); font-size: 14.5px; color: var(--ink); margin-bottom: 3px; }
+.layer p { font-size: 13.5px; color: var(--ink-2); }
+.layer .files { font-family: var(--mono); font-size: 11.5px; color: var(--ink-4); margin-top: 5px; }
+
+/* --------------------------------------------------------------- matrices */
+.matrix td.tick { text-align: center; }
+.dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; }
+.dot.on { background: var(--teal); }
+.dot.off { background: var(--line-strong); opacity: .55; }
+.matrix thead th:not(:first-child) { text-align: center; }
+
+ul { margin: 0; padding-left: 19px; display: flex; flex-direction: column; gap: 5px; max-width: var(--measure); }
+li { color: var(--ink-2); }
+li strong, p strong { color: var(--ink); }
+
+.foot {
+  border-top: 1px solid var(--line); padding-top: 20px; margin-top: 8px;
+  font-size: 12.5px; color: var(--ink-4); display: flex; flex-wrap: wrap; gap: 6px 18px;
+}
+
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <div class="eyebrow">Coforge &middot; Solution design &middot; Proof of concept</div>
+    <h1>AI-Native Mortgage</h1>
+    <p class="lede">
+      Four Claude agents read a real loan file, raise findings, repair what they are
+      permitted to repair, and hand everything else to a named human. What follows is a
+      complete inventory of what exists — every module, tool, rule, control and harness.
+    </p>
+    <div class="figures">
+      <div class="figure"><b>6,611</b><span>lines, backend</span></div>
+      <div class="figure"><b>13</b><span>tools</span></div>
+      <div class="figure"><b>4</b><span>agents</span></div>
+      <div class="figure"><b>11</b><span>rules</span></div>
+      <div class="figure"><b>10</b><span>tables</span></div>
+      <div class="figure"><b>264</b><span>backend tests</span></div>
+      <div class="figure"><b>147</b><span>data checks</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="shell">
+  <aside class="toc">
+    <nav>
+      <div class="toc-head">Contents</div>
+      <a href="#stack">Tech stack</a>
+      <a href="#layers">Architecture</a>
+      <a href="#modules">Modules</a>
+      <a href="#data">Data model</a>
+      <a href="#tools">Tools</a>
+      <a href="#agents">Agents</a>
+      <a href="#orchestration">Orchestration</a>
+      <a href="#rules">Rules engine</a>
+      <a href="#policy">Disposition policy</a>
+      <a href="#memory">Memory</a>
+      <a href="#security">Security</a>
+      <a href="#harness">Harness</a>
+      <a href="#frontend">Interface</a>
+      <a href="#gaps">Not built</a>
+    </nav>
+  </aside>
+
+  <main class="body">
+
+    <!-- ============================================================ STACK -->
+    <section id="stack">
+      <div class="sec-head">
+        <div class="sec-num">01 &mdash; Foundation</div>
+        <h2>Tech stack</h2>
+        <p>Every version below is pinned exactly in <code>requirements.lock.txt</code> and verified &mdash; the lock is what the container installs, not the range file.</p>
+      </div>
+
+      <div class="scroller">
+        <table>
+          <thead><tr><th>Layer</th><th>Choice</th><th>Version</th><th>Why this one</th></tr></thead>
+          <tbody>
+            <tr><td>Model</td><td class="mono">claude-opus-4-7</td><td class="mono">—</td><td>Hosted on Microsoft Foundry; adaptive thinking, strict tools and prompt caching all verified on the deployment</td></tr>
+            <tr><td>SDK</td><td class="mono">anthropic</td><td class="mono">0.125.0</td><td><code>AnthropicFoundry</code> client. Pinned <code>==</code>, not a range: the spike verified seven capabilities against this exact build</td></tr>
+            <tr><td>Language</td><td>Python</td><td class="mono">3.14</td><td>Backend, agents, rules, evaluation</td></tr>
+            <tr><td>API</td><td class="mono">fastapi</td><td class="mono">0.141.1</td><td>20 endpoints, SSE for the live agent log, serves the built SPA</td></tr>
+            <tr><td>ORM</td><td class="mono">sqlmodel</td><td class="mono">0.0.39</td><td>SQLAlchemy 2.0.52 underneath; SQLite with foreign keys and WAL enabled per connection</td></tr>
+            <tr><td>Validation</td><td class="mono">pydantic</td><td class="mono">2.13.4</td><td>Settings, request bodies, structured model output</td></tr>
+            <tr><td>Auth</td><td class="mono">python-jose</td><td class="mono">3.5.0</td><td>HS256 tokens, 8-hour expiry</td></tr>
+            <tr><td>Passwords</td><td class="mono">bcrypt</td><td class="mono">5.0.0</td><td>Called directly. <code>passlib</code> was removed — its backend probe hashes an over-length secret, which bcrypt 5 rejects</td></tr>
+            <tr><td>Streaming</td><td class="mono">sse-starlette</td><td class="mono">3.4.8</td><td>The live agent log</td></tr>
+            <tr><td>UI</td><td>React + TypeScript</td><td class="mono">19.2 / 5.9</td><td>Six screens, Vite 7 build, 229&nbsp;kB bundle (70&nbsp;kB gzipped)</td></tr>
+            <tr><td>Test</td><td class="mono">pytest / vitest</td><td class="mono">9.1.1 / 4.1</td><td>264 backend, 14 frontend — none of them call a model</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <p><strong>Two dependency files, two locks.</strong> <code>requirements.txt</code> declares intent; <code>requirements.lock.txt</code> is the 46-package runtime closure the image installs with <code>--no-deps</code>. <code>requirements-dev.lock.txt</code> adds five test packages that have no business in production.</p>
+      </div>
+    </section>
+
+    <!-- =========================================================== LAYERS -->
+    <section id="layers">
+      <div class="sec-head">
+        <div class="sec-num">02 &mdash; Shape</div>
+        <h2>Architecture</h2>
+        <p>Seven layers, numbered because they are a genuine dependency order — each was built and tested before the one above it existed, and each depends only on what is below.</p>
+      </div>
+
+      <div class="layers">
+        <div class="layer"><div class="n">1</div><div>
+          <h4>Constraint layer</h4>
+          <p>Disposition thresholds, one-directional correction, system invariants, the agent capability matrix and the hash-chained audit trail. Written first and proven correct before anything autonomous was pointed at it.</p>
+          <div class="files">policy.py &middot; gate.py &middot; audit.py &middot; config.py &middot; market_data.py</div>
+        </div></div>
+        <div class="layer"><div class="n">2</div><div>
+          <h4>Synthetic book</h4>
+          <p>12 loans, 161 documents, 19 planted defects, one deliberately clean file. Deterministic on a fixed seed. Ground truth is recorded separately and never enters the system.</p>
+          <div class="files">generate_synthetic_data.py &middot; verify_synthetic_data.py</div>
+        </div></div>
+        <div class="layer"><div class="n">3</div><div>
+          <h4>Persistence &amp; rules</h4>
+          <p>The schema, the single guarded write path, and eleven deterministic rules that recompute quantities rather than reading them. This is the layer that can contradict the model.</p>
+          <div class="files">models.py &middot; db.py &middot; store.py &middot; rules.py &middot; seed.py</div>
+        </div></div>
+        <div class="layer"><div class="n">4</div><div>
+          <h4>Tool layer</h4>
+          <p>Thirteen handlers behind one dispatcher. Budget, gate, schema validation, execution and recording happen in that order, for every tool, with no faster path available to anything.</p>
+          <div class="files">tools/runtime.py &middot; tools/handlers.py &middot; guidelines.py &middot; documents.py</div>
+        </div></div>
+        <div class="layer"><div class="n">5</div><div>
+          <h4>Agents</h4>
+          <p>Four system prompts and one loop that runs any of them. Every model-initiated tool call goes through the same dispatcher as a scripted one.</p>
+          <div class="files">agents/prompts.py &middot; agents/runner.py &middot; agents/__init__.py</div>
+        </div></div>
+        <div class="layer"><div class="n">6</div><div>
+          <h4>Interface</h4>
+          <p>Human capability matrix, the actions people take, read models, the HTTP API, and a six-screen React app. Every mutating endpoint re-checks the role before it writes.</p>
+          <div class="files">rbac.py &middot; human.py &middot; reporting.py &middot; api.py &middot; frontend/</div>
+        </div></div>
+        <div class="layer"><div class="n">7</div><div>
+          <h4>Evaluation</h4>
+          <p>Scores what the agents found against what was planted. Five verdicts, not two. Found three bugs in the data it was scoring against on its first full run.</p>
+          <div class="files">evaluation.py &middot; evaluate.py</div>
+        </div></div>
+      </div>
+    </section>
+
+    <!-- ========================================================== MODULES -->
+    <section id="modules">
+      <div class="sec-head">
+        <div class="sec-num">03 &mdash; Inventory</div>
+        <h2>Backend modules</h2>
+        <p>Twenty-two modules, 6,611 lines. Logic lives in <code>app/</code>; every script in <code>scripts/</code> is a thin driver over it, so nothing is only reachable from a command line.</p>
+      </div>
+
+      <div class="scroller">
+        <table>
+          <thead><tr><th class="mono">module</th><th class="num">lines</th><th>responsibility</th><th>key surface</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">policy.py</td><td class="num">278</td><td>Disposition thresholds, one-directional correction, invariants, run budgets</td><td class="mono">decide_disposition, revise_confidence, revise_disposition, is_ready</td></tr>
+            <tr><td class="mono">gate.py</td><td class="num">188</td><td>Agent capability matrix — the primary security control</td><td class="mono">check, confirmation_token, tools_for_agent</td></tr>
+            <tr><td class="mono">audit.py</td><td class="num">110</td><td>Hash-chained append-only trail, redaction before hashing</td><td class="mono">build_entry, verify_chain, redact_detail, canonical</td></tr>
+            <tr><td class="mono">models.py</td><td class="num">432</td><td>Ten SQLModel tables; <code>from_finding()</code> is the only way to create an exception</td><td class="mono">ExceptionRecord.from_finding, queue_for</td></tr>
+            <tr><td class="mono">store.py</td><td class="num">416</td><td>The single guarded write path — recompute, assert, audit, commit</td><td class="mono">guarded_write, append_audit, revise_finding, build_facts</td></tr>
+            <tr><td class="mono">rules.py</td><td class="num">636</td><td>Eleven deterministic rules, pure functions over a Facts snapshot</td><td class="mono">evaluate, evaluate_all, Facts, Outcome</td></tr>
+            <tr><td class="mono">db.py</td><td class="num">94</td><td>Engine, session scope, per-connection pragmas</td><td class="mono">get_engine, init_db, session_scope, get_session</td></tr>
+            <tr><td class="mono">seed.py</td><td class="num">160</td><td>Idempotent loader; never loads ground truth</td><td class="mono">seed_all, seed_loans, seed_notes</td></tr>
+            <tr><td class="mono">tools/runtime.py</td><td class="num">350</td><td>The dispatcher, schema validation, gated-call queueing</td><td class="mono">dispatch, register, tool_schemas_for, queue_confirmation</td></tr>
+            <tr><td class="mono">tools/handlers.py</td><td class="num">771</td><td>The thirteen handlers</td><td class="mono">read_document, raise_exception, apply_auto_repair, …</td></tr>
+            <tr><td class="mono">guidelines.py</td><td class="num">372</td><td>Agency guideline corpus and the cacheable context pack</td><td class="mono">build_context_pack, lookup, passages_for</td></tr>
+            <tr><td class="mono">documents.py</td><td class="num">184</td><td>Document text and the injected-instruction scanner</td><td class="mono">text_of, scan_text, neutralise_delimiters, banner_for</td></tr>
+            <tr><td class="mono">agents/runner.py</td><td class="num">327</td><td>The agent loop, budget accounting, cache breakpoint placement</td><td class="mono">run_agent, build_system, approved_confirmations</td></tr>
+            <tr><td class="mono">agents/prompts.py</td><td class="num">284</td><td>Four system prompts, byte-stable so they cache</td><td class="mono">SYSTEM_PROMPTS, TASKS</td></tr>
+            <tr><td class="mono">agents/__init__.py</td><td class="num">127</td><td>Pipeline order and per-agent run isolation</td><td class="mono">run_pipeline, mark_scanned, PIPELINE</td></tr>
+            <tr><td class="mono">rbac.py</td><td class="num">239</td><td>Human capability matrix, tokens, password hashing</td><td class="mono">require, require_queue, issue_token, read_token</td></tr>
+            <tr><td class="mono">human.py</td><td class="num">294</td><td>What people do — claim, act, approve, confirm, decide</td><td class="mono">act_on_exception, decide_approval, decide_confirmation, decide_loan</td></tr>
+            <tr><td class="mono">reporting.py</td><td class="num">228</td><td>Read models, derived on every request and never stored</td><td class="mono">kpis, hub, rules_panel, exception_view</td></tr>
+            <tr><td class="mono">api.py</td><td class="num">445</td><td>20 endpoints, SSE scan stream, error translation, SPA mount</td><td class="mono">login, scan, act, decide_approval, decide_loan</td></tr>
+            <tr><td class="mono">evaluation.py</td><td class="num">322</td><td>Scoring against ground truth; five verdicts</td><td class="mono">build_report, score_loan, Report.calibration</td></tr>
+            <tr><td class="mono">config.py</td><td class="num">169</td><td>Settings, secret loading, budget ceilings, path anchoring</td><td class="mono">get_settings, foundry_client_kwargs, safe_summary</td></tr>
+            <tr><td class="mono">market_data.py</td><td class="num">160</td><td>Researched 2026 limits, rates, MIP and funding fees</td><td class="mono">PROGRAM_LIMITS, conforming_limit, is_jumbo, note_rate</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============================================================= DATA -->
+    <section id="data">
+      <div class="sec-head">
+        <div class="sec-num">04 &mdash; State</div>
+        <h2>Data model</h2>
+        <p>Ten tables. No ORM relationships anywhere, deliberately — every link is a plain foreign key and every read is an explicit query, so nothing lazy-loads a borrower file into a context pack because a template touched an attribute.</p>
+      </div>
+
+      <div class="scroller">
+        <table>
+          <thead><tr><th class="mono">table</th><th class="num">cols</th><th>holds</th><th>notable</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">loan</td><td class="num">23</td><td>Header plus pipeline state</td><td><code>ready</code> is a cached projection of <code>is_ready()</code>, never assigned by a caller</td></tr>
+            <tr><td class="mono">document</td><td class="num">5</td><td>One row per file on a loan</td><td>Paths stored posix so one database works on Windows and in the container</td></tr>
+            <tr><td class="mono">extracted_field</td><td class="num">9</td><td>Fields intake pulled from documents</td><td>Confidence is 0–1 extraction confidence, a different scale from a finding&rsquo;s 0–100</td></tr>
+            <tr><td class="mono">exception_record</td><td class="num">24</td><td>Findings and their disposition</td><td><code>lane</code>, <code>requires_sup</code> and <code>disposition_reason</code> are policy-assigned; no agent can write them</td></tr>
+            <tr><td class="mono">approval</td><td class="num">13</td><td>Analyst proposals awaiting sign-off</td><td>One live proposal per exception; a rejection reopens the case</td></tr>
+            <tr><td class="mono">confirmation</td><td class="num">10</td><td>Gated calls awaiting a person</td><td>Primary key is the argument-bound token, so approving one order never approves another</td></tr>
+            <tr><td class="mono">run</td><td class="num">12</td><td>One agent invocation and its spend</td><td>Tokens and cost written every turn, not on clean exit — an expensive failure still records what it cost</td></tr>
+            <tr><td class="mono">tool_call</td><td class="num">12</td><td>Every attempt, permitted or refused</td><td>Refusals are the interesting rows; arguments redacted before storage</td></tr>
+            <tr><td class="mono">audit_entry</td><td class="num">11</td><td>The hash chain</td><td><code>UNIQUE(prev_hash)</code> makes a forked chain structurally impossible</td></tr>
+            <tr><td class="mono">note</td><td class="num">6</td><td>Operational memory</td><td>Only written by a human resolution or a verified outcome</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ============================================================ TOOLS -->
+    <section id="tools">
+      <div class="sec-head">
+        <div class="sec-num">05 &mdash; Capability</div>
+        <h2>Tools</h2>
+        <p>Thirteen, each with a posture that drives gating, logging and colour. Which agent may call which is a matrix in Python, not a line in a prompt.</p>
+      </div>
+
+      <div class="scroller">
+        <table class="matrix">
+          <thead><tr>
+            <th class="mono">tool</th><th>posture</th>
+            <th>intake</th><th>validation</th><th>processing</th><th>summarizer</th>
+            <th>does</th>
+          </tr></thead>
+          <tbody>
+            <tr><td class="mono">get_loan</td><td><span class="chip read">read</span></td><td class="tick"><span class="dot on"></span></td><td class="tick"><span class="dot on"></span></td><td class="tick"><span class="dot on"></span></td><td class="tick"><span class="dot on"></span></td><td>Loan header, labelled so stated ratios are not trusted</td></tr>
+            <tr><td class="mono">list_documents</td><td><span class="chip read">read</span></td><td class="tick"><span class="dot on"></span></td><td class="tick"><span class="dot on"></span></td><td class="tick"><span class="dot on"></span></td><td class="tick"><span class="dot on"></span></td><td>What is on file</td></tr>
+            <tr><td class="mono">read_document</td><td><span class="chip read">read</span></td><td class="tick"><span class="dot on"></span></td><td class="tick"><span class="dot on"></span></td><td class="tick"><span class="dot off"></span></td><td class="tick"><span class="dot on"></span></td><td>Full text, scanned and delimited as untrusted data</td></tr>
+            <tr><td class="mono">get_extracted_fields</td><td><span class="chip read">read</span></td><td class="tick"><span class="dot off"></span></td><td class="tick"><span class="dot on"></span></td><td class="tick"><span class="dot on"></span></td><td class="tick"><span class="dot on"></span></td><td>Previously extracted values with confidences</td></tr>
+            <tr><td class="mono">list_exceptions</td><td><span class="chip read">read</span></td><td class="tick"><span class="dot off"></span></td><td class="tick"><span class="dot on"></span></td><td class="tick"><span class="dot on"></span></td><td class="tick"><span class="dot on"></span></td><td>Findings with lane, queue and status</td></tr>
+            <tr><td class="mono">evaluate_rule</td><td><span class="chip read">read</span></td><td class="tick"><span class="dot off"></span></td><td class="tick"><span class="dot on"></span></td><td class="tick"><span class="dot off"></span></td><td class="tick"><span class="dot off"></span></td><td>One deterministic rule: pass, fail or indeterminate</td></tr>
+            <tr><td class="mono">lookup_guideline</td><td><span class="chip read">read</span></td><td class="tick"><span class="dot off"></span></td><td class="tick"><span class="dot on"></span></td><td class="tick"><span class="dot off"></span></td><td class="tick"><span class="dot on"></span></td><td>Agency passage for a program and topic, with a citable source</td></tr>
+            <tr><td class="mono">recall_notes</td><td><span class="chip read">read</span></td><td class="tick"><span class="dot off"></span></td><td class="tick"><span class="dot on"></span></td><td class="tick"><span class="dot on"></span></td><td class="tick"><span class="dot off"></span></td><td>How this kind of finding was resolved before</td></tr>
+            <tr><td class="mono">record_extraction</td><td><span class="chip write">write</span></td><td class="tick"><span class="dot on"></span></td><td class="tick"><span class="dot off"></span></td><td class="tick"><span class="dot off"></span></td><td class="tick"><span class="dot off"></span></td><td>Persist one field with its confidence and source line</td></tr>
+            <tr><td class="mono">raise_exception</td><td><span class="chip write">write</span></td><td class="tick"><span class="dot off"></span></td><td class="tick"><span class="dot on"></span></td><td class="tick"><span class="dot off"></span></td><td class="tick"><span class="dot off"></span></td><td>Emit a finding; type constrained to an enum, evidence verified</td></tr>
+            <tr><td class="mono">apply_auto_repair</td><td><span class="chip write">write</span></td><td class="tick"><span class="dot off"></span></td><td class="tick"><span class="dot off"></span></td><td class="tick"><span class="dot on"></span></td><td class="tick"><span class="dot off"></span></td><td>Execute a repair — refused unless policy placed it in the auto lane</td></tr>
+            <tr><td class="mono">order_vendor_service</td><td><span class="chip gated">gated</span></td><td class="tick"><span class="dot off"></span></td><td class="tick"><span class="dot off"></span></td><td class="tick"><span class="dot on"></span></td><td class="tick"><span class="dot off"></span></td><td>Title, appraisal, flood, credit. Spends money</td></tr>
+            <tr><td class="mono">request_borrower_document</td><td><span class="chip gated">gated</span></td><td class="tick"><span class="dot off"></span></td><td class="tick"><span class="dot off"></span></td><td class="tick"><span class="dot on"></span></td><td class="tick"><span class="dot off"></span></td><td>Contacts a borrower. Irreversible</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <p><strong>Separation of duties between agents, for the same reason it exists between people.</strong> Validation may raise a finding but never repair one. Processing may repair but never raise. The Summarizer holds read-only tools and nothing else. This is also why a prompt-injected document is ineffective: persuading an agent to call a tool it does not hold changes nothing.</p>
+      </div>
+
+      <h3>What the dispatcher does, for every call</h3>
+      <div class="cards">
+        <div class="card"><div class="k">step 1</div><h4>Count the budget</h4><p>Counted before the call runs, so an over-budget run cannot squeeze in one more expensive tool on the way out.</p></div>
+        <div class="card"><div class="k">step 2</div><h4>Check the gate</h4><p>Capability, run-open, loan scope, and for gated tools an argument-bound human confirmation.</p></div>
+        <div class="card"><div class="k">step 3</div><h4>Validate arguments</h4><p>Against the declared schema. The API enforces strict tools too, but tests and HITL endpoints have no server in front of them.</p></div>
+        <div class="card"><div class="k">step 4</div><h4>Run the handler</h4><p>A handler that throws becomes an error result, not a dead run.</p></div>
+        <div class="card"><div class="k">step 5</div><h4>Record the attempt</h4><p>Permitted or refused, with arguments redacted. A run full of denials is a signal, and only if it is written down.</p></div>
+        <div class="card"><div class="k">exception</div><h4>Refusals return</h4><p>A denial comes back as <code>is_error</code> with a plain-English reason so the model adapts. Only budget exhaustion propagates and ends the run.</p></div>
+      </div>
+    </section>
+
+    <!-- =========================================================== AGENTS -->
+    <section id="agents">
+      <div class="sec-head">
+        <div class="sec-num">06 &mdash; Actors</div>
+        <h2>Agents</h2>
+        <p>Four, run in a fixed order that is a data dependency rather than a preference. Each gets its own run id, its own budget and its own line in the audit trail.</p>
+      </div>
+
+      <div class="scroller">
+        <table>
+          <thead><tr><th>agent</th><th class="num">tools</th><th>job</th><th>cannot</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Document Intake</strong></td><td class="num">4</td><td>Classifies documents and extracts the fourteen named fields the rules engine looks up by name. Records confidence 0–1 for how sure it is it <em>read</em> the value.</td><td>Judge the loan or raise a finding</td></tr>
+            <tr><td><strong>Validation</strong></td><td class="num">9</td><td>Runs the rules engine, consults guidelines and past resolutions, raises findings with verbatim evidence and a calibrated 0–100 confidence.</td><td>Repair anything it finds</td></tr>
+            <tr><td><strong>Processing</strong></td><td class="num">8</td><td>Repairs auto-lane findings and orders what the rest needs. Discovers work through <code>list_exceptions</code>.</td><td>Raise a finding, or touch a HITL case</td></tr>
+            <tr><td><strong>Summarizer</strong></td><td class="num">6</td><td>Writes the underwriter&rsquo;s summary — income, credit, collateral, and what could not be assessed.</td><td>Change anything at all</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <p><strong>The prompts are not the safety layer.</strong> Everything that matters — which tools an agent holds, whether a finding is auto-repaired, whether a repair is permitted — is enforced in Python. The prompts exist to make an agent effective inside those limits and to explain them, so it does not waste turns discovering them.</p>
+      </div>
+    </section>
+
+    <!-- ==================================================== ORCHESTRATION -->
+    <section id="orchestration">
+      <div class="sec-head">
+        <div class="sec-num">07 &mdash; Loop</div>
+        <h2>Orchestration</h2>
+        <p>A hand-written loop, not the SDK tool runner. The spike concluded otherwise; that was reversed once the tool layer existed.</p>
+      </div>
+
+      <div class="cards">
+        <div class="card"><div class="k">why manual</div><h4>Three reasons the runner did not fit</h4><p>It builds schemas from function signatures (we have thirteen hand-written strict ones with tests); it cannot mark a result <code>is_error</code>, which is the shape of every gate refusal; and it owns the loop, so a budget ceiling is discovered a turn late.</p></div>
+        <div class="card"><div class="k">request</div><h4>Two stable system blocks</h4><p>Agent prompt, then the program&rsquo;s guideline pack with the cache breakpoint at its end. Nothing loan-specific goes above that line — one loan id there would silently stop the cache ever hitting.</p></div>
+        <div class="card"><div class="k">turn</div><h4>Batched tool results</h4><p>All results from one assistant turn return in a single user message. Splitting them trains the model out of parallel calls for the rest of the run.</p></div>
+        <div class="card"><div class="k">thinking</div><h4>Adaptive, explicitly</h4><p><code>thinking: adaptive</code> with <code>effort: high</code>. Omitting the parameter on Opus 4.7 means no thinking at all, so it is always set. Thinking blocks are echoed back unchanged.</p></div>
+        <div class="card"><div class="k">budget</div><h4>Four ceilings per run</h4><p>Tool calls, tokens, seconds and dollars. Spend is written to the <code>run</code> row every turn, so a run that dies expensively still records what it cost.</p></div>
+        <div class="card"><div class="k">handoff</div><h4>Approval crosses runs</h4><p>A gated call is refused and queued. A supervisor authorises. The next run loads approved tokens into its context and the identical call passes. A person authorises; an agent acts.</p></div>
+      </div>
+    </section>
+
+    <!-- ============================================================ RULES -->
+    <section id="rules">
+      <div class="sec-head">
+        <div class="sec-num">08 &mdash; Arithmetic</div>
+        <h2>Rules engine</h2>
+        <p>Eleven pure functions over a <code>Facts</code> snapshot. No database, no model, no raising. They recompute quantities rather than reading them, which is what lets them contradict the model.</p>
+      </div>
+
+      <div class="scroller">
+        <table>
+          <thead><tr><th class="mono">rule</th><th>tests</th><th>suggests on failure</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">agency_eligibility</td><td>Loan size against the county conforming limit; FICO floor; mislabelled program</td><td class="mono">program_eligibility</td></tr>
+            <tr><td class="mono">income_employment</td><td>Annualised paystub against the prior-year W-2, 5% reconciliation trigger</td><td class="mono">income_variance</td></tr>
+            <tr><td class="mono">dti_within_program</td><td>Recomputes back-end DTI from PITI, debts and income; flags a header that disagrees with its own arithmetic by more than a point</td><td class="mono">dti_breach</td></tr>
+            <tr><td class="mono">ltv_within_program</td><td>Recomputes LTV from amount and value against the program cap</td><td class="mono">ltv_breach</td></tr>
+            <tr><td class="mono">asset_sourcing</td><td>Single deposits above 50% of monthly qualifying income</td><td class="mono">unsourced_deposit</td></tr>
+            <tr><td class="mono">trid_fee_tolerance</td><td>Zero-tolerance increases and the 10% cumulative bucket, LE against CD</td><td class="mono">fee_tolerance_variance</td></tr>
+            <tr><td class="mono">flood_eligibility</td><td>Determination present; zone consistent with any prior determination</td><td class="mono">flood_cert_missing / flood_determination_mismatch</td></tr>
+            <tr><td class="mono">identity_cip</td><td>SSN trailing four digits, application against identity document</td><td class="mono">identity_mismatch</td></tr>
+            <tr><td class="mono">collateral_valuation</td><td>Appraised value against contract price; CU score above 2.5</td><td class="mono">appraisal_variance</td></tr>
+            <tr><td class="mono">document_completeness</td><td>Program-specific checklist — an FHA case number, a VA certificate of eligibility</td><td class="mono">missing_document</td></tr>
+            <tr><td class="mono">document_integrity</td><td>Injected-instruction markers found by a Python scan of the raw bytes</td><td class="mono">prompt_injection</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <p><strong>Three outcomes, not two.</strong> A rule with a missing input returns INDETERMINATE and names what is missing — never PASS. If <code>dti_within_program</code> passed when income had never been extracted, a file with no income documentation would clear the capacity check. Two further guards were added after a real run: a value containing an illegibility marker is not a number, and an extraction below <strong>0.60 confidence</strong> is withheld from the engine entirely, with the rule reporting the confidence rather than pretending the field was absent.</p>
+      </div>
+    </section>
+
+    <!-- =========================================================== POLICY -->
+    <section id="policy">
+      <div class="sec-head">
+        <div class="sec-num">09 &mdash; Judgment</div>
+        <h2>Disposition policy</h2>
+        <p>The model supplies an observation, a severity and a confidence. Python decides what follows. The finding schema has no <code>lane</code> parameter, so a model emitting one has nowhere to put it.</p>
+      </div>
+
+      <div class="cards">
+        <div class="card"><div class="k">auto thresholds</div><h4>Per type, never one number</h4>
+          <p class="mono" style="font-size:12.5px">missing_document 88 &middot; expired_document 88 &middot; low_confidence_ocr 85 &middot; flood_determination_mismatch 90 &middot; flood_cert_missing 90 &middot; fee_tolerance_variance 92</p>
+          <p>&ldquo;88% sure a document is missing&rdquo; and &ldquo;88% sure this income is right&rdquo; are not the same claim.</p></div>
+        <div class="card"><div class="k">never automatic</div><h4>Ten judgment calls</h4>
+          <p class="mono" style="font-size:12.5px">income_variance &middot; dti_breach &middot; ltv_breach &middot; title_exception &middot; identity_mismatch &middot; appraisal_variance &middot; undisclosed_debt &middot; unsourced_deposit &middot; aus_referral &middot; prompt_injection</p>
+          <p>A machine may analyse them; a person decides.</p></div>
+        <div class="card"><div class="k">supervisor sign-off</div><h4>Five require a second pair of eyes</h4>
+          <p class="mono" style="font-size:12.5px">dti_breach &middot; ltv_breach &middot; title_exception &middot; identity_mismatch &middot; prompt_injection</p>
+          <p>An analyst may only propose; a supervisor closes it.</p></div>
+        <div class="card"><div class="k">structural</div><h4>Unknown types route to a human</h4><p>An unrecognised type is compared against a sentinel of 101, which no confidence can reach — so it routes to a person structurally, not by luck.</p></div>
+        <div class="card"><div class="k">correction</div><h4>One-directional</h4><p>Confidence may be revised down, never up. A finding may move auto&nbsp;&rarr;&nbsp;HITL, never back. Both raise rather than clamp — a silent clamp hides the bug that caused it.</p></div>
+        <div class="card"><div class="k">readiness</div><h4>Derived, never assigned</h4><p>A loan is ready when every stage-0–2 finding is closed and at least one has moved. Re-derived after every write; a violation rolls the whole transaction back.</p></div>
+      </div>
+    </section>
+
+    <!-- =========================================================== MEMORY -->
+    <section id="memory">
+      <div class="sec-head">
+        <div class="sec-num">10 &mdash; Recall</div>
+        <h2>Memory</h2>
+        <p>Four distinct kinds, with deliberately different write rules. None of them is free-form model memory.</p>
+      </div>
+
+      <div class="scroller">
+        <table>
+          <thead><tr><th>kind</th><th>lives in</th><th>written by</th><th>read by</th><th>lifetime</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Operational memory</strong><br><span class="mono" style="font-size:11.5px">how this was handled before</span></td><td class="mono">note</td><td>A human resolution, or a verified outcome. <em>Never a model.</em></td><td class="mono">recall_notes</td><td>Permanent</td></tr>
+            <tr><td><strong>Extracted facts</strong><br><span class="mono" style="font-size:11.5px">what the documents say</span></td><td class="mono">extracted_field</td><td>Intake, with a 0–1 confidence and a source line</td><td class="mono">get_extracted_fields, build_facts</td><td>Per loan, durable</td></tr>
+            <tr><td><strong>Guideline knowledge</strong><br><span class="mono" style="font-size:11.5px">what the rules are</span></td><td class="mono">guidelines.py</td><td>Authored; every number interpolated from <code>market_data</code></td><td class="mono">lookup_guideline, context pack</td><td>Static, versioned with the code</td></tr>
+            <tr><td><strong>Conversation</strong><br><span class="mono" style="font-size:11.5px">what happened this run</span></td><td>The messages list</td><td>The loop</td><td>The model</td><td>Discarded when the run ends</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <p><strong>Memory cannot be poisoned by the model.</strong> A note is only written by a human resolution or a verified outcome, so an agent cannot assert something and later read its own assertion back as established fact. The guideline pack is authored and cached, ~2,400 tokens per program, byte-identical for every loan of that program — <strong>816,000 tokens were served from cache</strong> across the last full evaluation, which is the largest single cost lever in the build.</p>
+      </div>
+    </section>
+
+    <!-- ========================================================= SECURITY -->
+    <section id="security">
+      <div class="sec-head">
+        <div class="sec-num">11 &mdash; Controls</div>
+        <h2>Security</h2>
+        <p>Two capability matrices, one for agents and one for people, consulted in Python before any write. Everything else is defence in depth around them.</p>
+      </div>
+
+      <h3>Human capability matrix</h3>
+      <div class="scroller">
+        <table class="matrix">
+          <thead><tr><th>action</th><th>analyst</th><th>supervisor</th><th>underwriter</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">view_pipeline / view_exceptions / view_hub / view_audit</td><td class="tick"><span class="dot on"></span></td><td class="tick"><span class="dot on"></span></td><td class="tick"><span class="dot on"></span></td></tr>
+            <tr><td class="mono">work_exception</td><td class="tick"><span class="dot on"></span></td><td class="tick"><span class="dot on"></span></td><td class="tick"><span class="dot off"></span></td></tr>
+            <tr><td class="mono">view_approvals</td><td class="tick"><span class="dot off"></span></td><td class="tick"><span class="dot on"></span></td><td class="tick"><span class="dot off"></span></td></tr>
+            <tr><td class="mono">approve</td><td class="tick"><span class="dot off"></span></td><td class="tick"><span class="dot on"></span></td><td class="tick"><span class="dot off"></span></td></tr>
+            <tr><td class="mono">confirm_gated</td><td class="tick"><span class="dot off"></span></td><td class="tick"><span class="dot on"></span></td><td class="tick"><span class="dot off"></span></td></tr>
+            <tr><td class="mono">start_scan</td><td class="tick"><span class="dot off"></span></td><td class="tick"><span class="dot on"></span></td><td class="tick"><span class="dot off"></span></td></tr>
+            <tr><td class="mono">decide_loan</td><td class="tick"><span class="dot off"></span></td><td class="tick"><span class="dot off"></span></td><td class="tick"><span class="dot on"></span></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="font-size:13.5px;color:var(--ink-3)">A supervisor cannot render an underwriting decision, and an underwriter cannot work a HITL case. Approving a fix and deciding a loan are different jobs; collapsing them would make the approval lane decorative.</p>
+
+      <h3>Controls</h3>
+      <div class="cards">
+        <div class="card"><div class="k">agent capability</div><h4>The tool refuses, not the interface</h4><p>Every call passes <code>gate.check()</code>: capability, run-open, loan scope, and confirmation for gated tools. Refusals are returned to the model and recorded.</p></div>
+        <div class="card"><div class="k">human capability</div><h4>Hiding a button is not a control</h4><p>The React app hides what a role cannot do because showing it is bad design. Every mutating endpoint re-checks <code>rbac.require()</code> regardless. Tests post with the wrong role on purpose.</p></div>
+        <div class="card"><div class="k">tokens</div><h4>The role comes from the roster</h4><p>A token carries a username; the role is looked up server-side. A forged <code>role: supervisor</code> claim grants analyst access.</p></div>
+        <div class="card"><div class="k">argument binding</div><h4>Confirmation is not a blanket</h4><p>A confirmation token is the tool name plus its exact arguments. Authorising an appraisal never authorises a title order, or the same order on a different loan.</p></div>
+        <div class="card"><div class="k">audit</div><h4>Tamper-evident, not just logged</h4><p>Each row stores <code>sha256(prev_hash + payload)</code>. Editing or deleting any historical row breaks every hash after it. <code>UNIQUE(prev_hash)</code> makes a fork impossible; the API re-walks and rehashes the whole chain on every request.</p></div>
+        <div class="card"><div class="k">redaction</div><h4>Before hashing, never after</h4><p>Sensitive keys are stripped before a payload enters the chain — once a value is inside a hash it cannot be removed without breaking every row that follows.</p></div>
+        <div class="card"><div class="k">injection: detect</div><h4>Seven markers, in Python</h4><p>Raw bytes scanned before any model sees them: override, system impersonation, role reassignment, forced disposition, suppressed findings, fake authority, hidden delimiters. A tripwire, not a filter — a PASS means &ldquo;no known marker&rdquo;, never &ldquo;safe&rdquo;.</p></div>
+        <div class="card"><div class="k">injection: frame</div><h4>The delimiter cannot be closed</h4><p>Document text is wrapped and labelled untrusted, with an integrity banner the document cannot argue away. Any closing tag inside the body is escaped visibly, so the attempt stays in the transcript.</p></div>
+        <div class="card"><div class="k">injection: contain</div><h4>The only actual control</h4><p>Assume detection and framing both failed and the model complied fully: Validation still holds no repair tool, and <code>prompt_injection</code> is never automatic. Tested both ways.</p></div>
+        <div class="card"><div class="k">secrets</div><h4>One code path, three mechanisms</h4><p>Plain environment variables always. Local <code>.env</code>, Docker <code>--env-file</code>, Azure Key Vault reference resolved by managed identity. Never in the repo, an image layer, CI logs, or anything the bundle can reach.</p></div>
+        <div class="card"><div class="k">integrity</div><h4>Foreign keys are opt-in on SQLite</h4><p><code>PRAGMA foreign_keys=ON</code> per connection, so evidence cannot point at a document that does not exist. Invariants re-run inside the transaction; a violation rolls back the write <em>and</em> its audit line.</p></div>
+        <div class="card"><div class="k">evidence</div><h4>Quotes are verified</h4><p>A quote that does not appear in the cited document lowers the finding&rsquo;s confidence and routes it to a human. The observation survives; the confidence that auto-closed it does not.</p></div>
+      </div>
+    </section>
+
+    <!-- ========================================================== HARNESS -->
+    <section id="harness">
+      <div class="sec-head">
+        <div class="sec-num">12 &mdash; Harness</div>
+        <h2>Evaluation &amp; tooling</h2>
+        <p>The parts that exist to tell you whether the rest works.</p>
+      </div>
+
+      <div class="scroller">
+        <table>
+          <thead><tr><th class="mono">script</th><th class="num">lines</th><th>does</th><th>costs</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">spike_foundry.py</td><td class="num">314</td><td>Day-one gate: probes seven model capabilities on the deployment before anything depends on them</td><td>A few calls</td></tr>
+            <tr><td class="mono">generate_synthetic_data.py</td><td class="num">780</td><td>The book — 12 loans, 161 documents, 19 planted defects, deterministic on seed 20260820</td><td>Free</td></tr>
+            <tr><td class="mono">verify_synthetic_data.py</td><td class="num">338</td><td>147 checks: arithmetic consistency, defect discoverability, ground-truth isolation, lane-hint achievability</td><td>Free</td></tr>
+            <tr><td class="mono">init_db.py</td><td class="num">103</td><td>Create and seed, idempotent. Never drops a table</td><td>Free</td></tr>
+            <tr><td class="mono">tool_smoke.py</td><td class="num">211</td><td>Drives all thirteen tools over a real loan with no model in the loop</td><td>Free</td></tr>
+            <tr><td class="mono">run_agents.py</td><td class="num">167</td><td>Runs the four agents against Foundry with a live log</td><td>~$0.55 / loan</td></tr>
+            <tr><td class="mono">evaluate.py</td><td class="num">177</td><td>Scores findings against ground truth; <code>--run</code> scans first</td><td>Free to score</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>What the scorer measures</h3>
+      <div class="cards">
+        <div class="card"><div class="k">recall</div><h4>Did we find it at all</h4><p>A mislabelled finding counts as detected — it reached a human, just the wrong queue.</p></div>
+        <div class="card"><div class="k">type accuracy</div><h4>Having found it, named right</h4><p>Where a real finding ends up in the wrong queue. Currently 100%.</p></div>
+        <div class="card"><div class="k">lane accuracy</div><h4>Routed as the defect deserved</h4><p>Auto versus human versus sign-off. Currently 100%.</p></div>
+        <div class="card"><div class="k">precision</div><h4>How much was real</h4><p>Duplicates counted separately from invented findings — they are wasteful, not wrong, and the remedy differs.</p></div>
+        <div class="card"><div class="k">calibration</div><h4>Is a 95 better than a 65</h4><p>Hit rate per confidence band. If the bands are flat, the number the auto threshold routes on carries no information.</p></div>
+        <div class="card"><div class="k">isolation</div><h4>Ground truth never enters</h4><p>Read from disk by the scorer alone — never seeded, never in a prompt. The verify script asserts it has not leaked into any document.</p></div>
+      </div>
+
+      <h3>Test suites</h3>
+      <div class="scroller">
+        <table>
+          <thead><tr><th class="mono">suite</th><th class="num">tests</th><th>covers</th></tr></thead>
+          <tbody>
+            <tr><td class="mono">test_tools.py</td><td class="num">53</td><td>Dispatcher, refusals, injection framing, gated confirmation, schema constraints</td></tr>
+            <tr><td class="mono">test_rules.py</td><td class="num">51</td><td>Every rule, and that a missing or unreadable input never reads as a pass</td></tr>
+            <tr><td class="mono">test_safety.py</td><td class="num">42</td><td>Disposition policy, one-directional correction, gate, audit chain</td></tr>
+            <tr><td class="mono">test_api.py</td><td class="num">30</td><td>RBAC posted at directly with the wrong role; the propose/approve round trip</td></tr>
+            <tr><td class="mono">test_store.py</td><td class="num">29</td><td>Invariant rollback, chain integrity, foreign keys, confidence floor</td></tr>
+            <tr><td class="mono">test_agents.py</td><td class="num">28</td><td>The agent loop against a scripted client — no network, no spend</td></tr>
+            <tr><td class="mono">test_injection.py</td><td class="num">16</td><td>Detection, framing and containment of the planted attack document</td></tr>
+            <tr><td class="mono">test_evaluation.py</td><td class="num">15</td><td>The scorer itself — a scorer that flatters is worse than none</td></tr>
+            <tr><td class="mono">frontend</td><td class="num">14</td><td>API client auth behaviour and gated-action labelling</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ========================================================= FRONTEND -->
+    <section id="frontend">
+      <div class="sec-head">
+        <div class="sec-num">13 &mdash; Interface</div>
+        <h2>Six screens</h2>
+        <p>React 19 and TypeScript on Vite, built to the Coforge tokens. 1,700 lines of TSX plus 20 API endpoints behind it.</p>
+      </div>
+
+      <div class="scroller">
+        <table>
+          <thead><tr><th>screen</th><th class="mono">file</th><th>shows</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Dashboard</strong></td><td class="mono">Dashboard.tsx</td><td>Eight stat tiles, disposition split, severity, queue load, pipeline funnel, agent runs with cost and cache reads</td></tr>
+            <tr><td><strong>Loan Pipeline</strong></td><td class="mono">Pipeline.tsx</td><td>Stage funnel, the book, and the live agent log streamed over SSE while a scan runs</td></tr>
+            <tr><td><strong>AI Exceptions &amp; HITL</strong></td><td class="mono">Exceptions.tsx</td><td>Role-adaptive cards with evidence, the AI recommendation, and why the finding went where it did</td></tr>
+            <tr><td><strong>Underwriters&rsquo; Hub</strong></td><td class="mono">Hub.tsx</td><td>Guideline flags, AUS result, the rules panel with three outcomes, conditions, and the decision</td></tr>
+            <tr><td><strong>Approvals</strong></td><td class="mono">Approvals.tsx</td><td>Analyst proposals and gated agent actions, grouped by loan and named by what they actually do</td></tr>
+            <tr><td><strong>Audit Trail</strong></td><td class="mono">Audit.tsx</td><td>Every action, AI and human, with chain integrity verified on each request</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <p><strong>Charts: form first, colour last.</strong> Every chart here answers a magnitude-across-categories question, so every one is a bar. The reference design&rsquo;s line and area charts are absent because this system has no time series — drawing a trend would mean inventing history on a governance dashboard. The first categorical palette tried failed a colour-vision check at &Delta;E&nbsp;6.5 for protanopia; the fix was one hue, not three, since queue identity is carried by the row label.</p>
+      </div>
+    </section>
+
+    <!-- ============================================================= GAPS -->
+    <section id="gaps">
+      <div class="sec-head">
+        <div class="sec-num">14 &mdash; Honest</div>
+        <h2>What is not built</h2>
+        <p>Known, scoped, and deliberately deferred.</p>
+      </div>
+
+      <ul>
+        <li><strong>No Dockerfile or deployment.</strong> Held until the feature set settles after team testing.</li>
+        <li><strong>Recall is 68.4%</strong> — 13 of 19 planted defects. All six misses are in areas with <em>no rule</em>: AUS results, document expiry, title exceptions, credit inquiries. Where a rule points at a document the agents find the defect; where none does, they do not look. Four rules is the lever.</li>
+        <li><strong>Nobody has visually reviewed the UI.</strong> It was built without a browser available. Typechecks and unit tests pass; layout has never been seen.</li>
+        <li><strong>Demo-grade auth.</strong> Five accounts share one password, and the SSE endpoint takes its token in the query string. Fine on localhost, nowhere else.</li>
+        <li><strong>No Entra ID.</strong> <code>AnthropicFoundry</code> accepts <code>azure_ad_token_provider</code>, which would remove the API key entirely — strictly better than a key in Key Vault, since there is no long-lived secret to rotate. Noted for deployment.</li>
+        <li><strong>Calibration is under-measured.</strong> The 90–100 band is 12/12, but the middle bands are empty and n is small. No conclusion should be drawn from 13 findings.</li>
+        <li><strong>Single SQLite file.</strong> WAL is on and it is fine for a demo; concurrent writers beyond one process are not a tested path.</li>
+      </ul>
+    </section>
+
+    <div class="foot">
+      <span>Coforge AI-Native Mortgage &mdash; proof of concept</span>
+      <span>claude-opus-4-7 on Microsoft Foundry</span>
+      <span>264 backend tests &middot; 14 frontend &middot; 147 data checks</span>
+      <span>Inventory current as of 2026-08-20</span>
+    </div>
+  </main>
+</div>

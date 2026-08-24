@@ -1,0 +1,806 @@
+<title>Inside AI-Native Mortgage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,600;0,700;1,6..72,400&family=Public+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<style>
+:root{
+  --paper:#F4F6F9; --surface:#FFFFFF; --surface-2:#EAEEF5; --surface-3:#DFE5EF;
+  --ink:#0F1A2B; --ink-2:#3B4A62; --ink-3:#68768D;
+  --rule:#DBE1EC; --rule-2:#BFC9D9;
+  --accent:#D34C33; --accent-soft:#FBEBE7;
+  --machine:#0D7660; --machine-soft:#E2F1ED;
+  --human:#A9691A; --human-soft:#FAEFDF;
+  --alarm:#B83026; --alarm-soft:#FBEAE8;
+  --shadow:0 1px 2px rgba(15,26,43,.05), 0 8px 24px -12px rgba(15,26,43,.14);
+  --measure:68ch;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#0A1019; --surface:#111A29; --surface-2:#172236; --surface-3:#1F2C44;
+    --ink:#E7ECF5; --ink-2:#AEBACD; --ink-3:#7E8CA5;
+    --rule:#22304A; --rule-2:#324158;
+    --accent:#FF7D62; --accent-soft:#2B1611;
+    --machine:#43C4A4; --machine-soft:#0A2922;
+    --human:#E3A455; --human-soft:#2A1F10;
+    --alarm:#F47362; --alarm-soft:#2E1310;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0A1019; --surface:#111A29; --surface-2:#172236; --surface-3:#1F2C44;
+  --ink:#E7ECF5; --ink-2:#AEBACD; --ink-3:#7E8CA5;
+  --rule:#22304A; --rule-2:#324158;
+  --accent:#FF7D62; --accent-soft:#2B1611;
+  --machine:#43C4A4; --machine-soft:#0A2922;
+  --human:#E3A455; --human-soft:#2A1F10;
+  --alarm:#F47362; --alarm-soft:#2E1310;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -12px rgba(0,0,0,.6);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--paper); color:var(--ink-2);
+  font-family:'Public Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  font-size:16.5px; line-height:1.65; -webkit-font-smoothing:antialiased;
+}
+h1,h2,h3,h4{font-family:'Newsreader',Georgia,'Times New Roman',serif;color:var(--ink);
+  text-wrap:balance;line-height:1.16;margin:0;font-weight:600}
+.mono{font-family:'IBM Plex Mono',ui-monospace,Menlo,monospace;font-variant-numeric:tabular-nums}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ---------- shell ---------- */
+.wrap{max-width:1180px;margin:0 auto;padding:0 28px 120px;
+  display:grid;grid-template-columns:1fr;gap:0}
+@media (min-width:1060px){
+  .wrap{grid-template-columns:212px minmax(0,1fr);gap:56px;padding-right:40px}
+}
+.rail{display:none}
+@media (min-width:1060px){
+  .rail{display:block;position:sticky;top:0;align-self:start;height:100vh;
+    padding-top:120px;overflow-y:auto}
+}
+.rail ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.rail a{display:flex;gap:10px;text-decoration:none;color:var(--ink-3);
+  font-size:13.5px;line-height:1.35;padding:7px 10px;border-radius:5px;
+  border-left:2px solid transparent;transition:color .15s,background .15s}
+.rail a:hover{color:var(--ink);background:var(--surface-2)}
+.rail a .n{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--rule-2);
+  padding-top:2px;flex:none}
+.col{max-width:var(--measure);min-width:0}
+
+/* ---------- masthead ---------- */
+.mast{padding:76px 0 40px;border-bottom:2px solid var(--ink);margin-bottom:46px}
+.kicker{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--accent);font-weight:500;margin:0 0 20px}
+.mast h1{font-size:clamp(38px,6vw,60px);letter-spacing:-.02em;font-weight:700}
+.mast h1 em{font-style:italic;font-weight:400;color:var(--ink-2)}
+.standfirst{font-size:19px;line-height:1.55;color:var(--ink-2);margin:22px 0 0;max-width:60ch}
+.byline{margin-top:26px;font-family:'IBM Plex Mono',monospace;font-size:12px;
+  color:var(--ink-3);display:flex;flex-wrap:wrap;gap:6px 18px}
+
+/* ---------- sections ---------- */
+section{margin:0 0 68px;scroll-margin-top:28px}
+.snum{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-3);display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.snum::after{content:'';height:1px;background:var(--rule);flex:1}
+section>h2{font-size:clamp(27px,3.4vw,34px);letter-spacing:-.015em;margin-bottom:18px}
+h3{font-size:20.5px;margin:38px 0 12px;letter-spacing:-.01em}
+h4{font-size:16px;font-family:'Public Sans',sans-serif;font-weight:700;color:var(--ink);
+  margin:26px 0 8px;letter-spacing:.005em}
+p{margin:0 0 16px}
+.lede{font-size:17.5px;color:var(--ink-2)}
+strong{color:var(--ink);font-weight:600}
+ul,ol{margin:0 0 18px;padding-left:22px}
+li{margin-bottom:8px}
+li::marker{color:var(--rule-2)}
+hr{border:0;border-top:1px solid var(--rule);margin:40px 0}
+
+/* ---------- lane semantics ---------- */
+.chip{display:inline-flex;align-items:center;gap:6px;font-family:'IBM Plex Mono',monospace;
+  font-size:11.5px;font-weight:500;padding:2px 8px;border-radius:3px;
+  letter-spacing:.02em;white-space:nowrap;vertical-align:1px}
+.chip.m{background:var(--machine-soft);color:var(--machine)}
+.chip.h{background:var(--human-soft);color:var(--human)}
+.chip.s{background:var(--accent-soft);color:var(--accent)}
+.chip.n{background:var(--surface-2);color:var(--ink-3)}
+
+/* ---------- callout ---------- */
+.callout{background:var(--surface);border:1px solid var(--rule);
+  border-left:3px solid var(--ink-3);border-radius:0 6px 6px 0;
+  padding:20px 24px;margin:26px 0;box-shadow:var(--shadow)}
+.callout.warn{border-left-color:var(--alarm);background:var(--alarm-soft);border-color:transparent}
+.callout.warn .ct{color:var(--alarm)}
+.callout .ct{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ink-3);margin-bottom:9px;font-weight:600}
+.callout p:last-child{margin-bottom:0}
+
+/* ---------- breakout ---------- */
+.breakout{margin:34px 0}
+@media (min-width:1060px){.breakout{width:min(calc(100vw - 340px),1000px)}}
+
+/* ---------- stage rail ---------- */
+.stages{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:1px;
+  background:var(--rule);border:1px solid var(--rule);border-radius:6px;overflow:hidden}
+.stage{background:var(--surface);padding:15px 16px 17px}
+.stage .sn{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;
+  color:var(--ink-3);text-transform:uppercase}
+.stage .st{font-family:'Newsreader',serif;font-size:16.5px;color:var(--ink);
+  font-weight:600;margin:3px 0 6px;line-height:1.25}
+.stage .sd{font-size:13px;line-height:1.5;color:var(--ink-3)}
+.stage.dim{background:var(--surface-2)}
+.stage.dim .st{color:var(--ink-2)}
+
+/* ---------- fork diagram ---------- */
+.fork{background:var(--surface);border:1px solid var(--rule);border-radius:8px;
+  padding:26px 24px;box-shadow:var(--shadow)}
+.fork-top{display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+  padding-bottom:18px;border-bottom:1px dashed var(--rule-2);margin-bottom:20px}
+.fork-top .box{background:var(--surface-2);border:1px solid var(--rule);border-radius:5px;
+  padding:9px 14px;font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--ink)}
+.arrow{color:var(--rule-2);font-size:16px;flex:none}
+.lanes{display:grid;gap:16px}
+@media (min-width:640px){.lanes{grid-template-columns:1fr 1fr}}
+.lane{border-radius:6px;padding:16px 18px;border:1px solid var(--rule)}
+.lane.m{background:var(--machine-soft);border-color:transparent}
+.lane.h{background:var(--human-soft);border-color:transparent}
+.lane .lh{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.1em;
+  text-transform:uppercase;font-weight:600;margin-bottom:8px}
+.lane.m .lh{color:var(--machine)}
+.lane.h .lh{color:var(--human)}
+.lane .lt{font-family:'Newsreader',serif;font-size:17px;color:var(--ink);font-weight:600;margin-bottom:7px}
+.lane p{font-size:14px;line-height:1.55;margin:0;color:var(--ink-2)}
+.lane ol{margin:10px 0 0;padding-left:18px;font-size:14px;line-height:1.5}
+.lane li{margin-bottom:5px;color:var(--ink-2)}
+
+/* ---------- table ---------- */
+.tw{overflow-x:auto;border:1px solid var(--rule);border-radius:6px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14px}
+th{text-align:left;font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3);font-weight:600;padding:11px 14px;
+  background:var(--surface-2);border-bottom:1px solid var(--rule);white-space:nowrap}
+td{padding:11px 14px;border-bottom:1px solid var(--rule);vertical-align:top;color:var(--ink-2)}
+tr:last-child td{border-bottom:0}
+td.mono{font-family:'IBM Plex Mono',monospace;font-size:13px;white-space:nowrap;color:var(--ink)}
+td b{color:var(--ink);font-weight:600}
+.num{font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+
+/* ---------- def list ---------- */
+.defs{display:grid;gap:0;border-top:1px solid var(--rule);margin:22px 0}
+.def{display:grid;gap:2px 20px;padding:15px 0;border-bottom:1px solid var(--rule)}
+@media (min-width:620px){.def{grid-template-columns:190px minmax(0,1fr)}}
+.def dt{font-family:'IBM Plex Mono',monospace;font-size:12.5px;color:var(--ink);font-weight:500;padding-top:2px}
+.def dd{margin:0;font-size:15px;line-height:1.6}
+
+/* ---------- phase timeline ---------- */
+.phases{display:flex;flex-direction:column;gap:0;margin:24px 0;
+  border-left:2px solid var(--rule);padding-left:0}
+.phase{position:relative;padding:0 0 26px 26px}
+.phase:last-child{padding-bottom:0}
+.phase::before{content:'';position:absolute;left:-6px;top:7px;width:10px;height:10px;
+  border-radius:50%;background:var(--paper);border:2px solid var(--rule-2)}
+.phase.live::before{background:var(--machine);border-color:var(--machine)}
+.phase .pn{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3)}
+.phase .pt{font-family:'Newsreader',serif;font-size:18px;color:var(--ink);font-weight:600;margin:2px 0 5px}
+.phase p{font-size:14.5px;margin:0;color:var(--ink-2)}
+
+/* ---------- stakeholder grid ---------- */
+.people{display:grid;gap:1px;background:var(--rule);border:1px solid var(--rule);
+  border-radius:6px;overflow:hidden;margin:24px 0}
+@media (min-width:620px){.people{grid-template-columns:1fr 1fr}}
+.person{background:var(--surface);padding:16px 18px}
+.person .pw{font-family:'Newsreader',serif;font-size:16.5px;color:var(--ink);font-weight:600}
+.person .pg{font-size:14px;line-height:1.55;margin-top:5px;color:var(--ink-2)}
+
+/* ---------- generation ladder ---------- */
+.gen{display:grid;gap:1px;background:var(--rule);border:1px solid var(--rule);
+  border-radius:6px;overflow:hidden;margin:24px 0}
+.grow{background:var(--surface);padding:14px 18px;display:grid;gap:3px 18px}
+@media (min-width:620px){.grow{grid-template-columns:130px minmax(0,1fr)}}
+.grow.now{background:var(--accent-soft)}
+.grow .gl{font-family:'IBM Plex Mono',monospace;font-size:11.5px;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-3);font-weight:600;padding-top:3px}
+.grow.now .gl{color:var(--accent)}
+.grow .gd{font-size:14.5px;line-height:1.55}
+.grow .gd b{color:var(--ink)}
+
+footer{border-top:2px solid var(--ink);margin-top:20px;padding-top:24px;
+  font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--ink-3);
+  display:flex;flex-wrap:wrap;gap:8px 24px}
+</style>
+
+<div class="wrap">
+
+<nav class="rail" aria-label="Contents">
+  <ol>
+    <li><a href="#p1"><span class="n">01</span><span>The process &amp; the goal</span></a></li>
+    <li><a href="#p2"><span class="n">02</span><span>The demo &amp; its data</span></a></li>
+    <li><a href="#p3"><span class="n">03</span><span>Tech stack</span></a></li>
+    <li><a href="#p4"><span class="n">04</span><span>How it's built</span></a></li>
+    <li><a href="#p5"><span class="n">05</span><span>Road to production</span></a></li>
+    <li><a href="#p6"><span class="n">06</span><span>Where it fits</span></a></li>
+  </ol>
+</nav>
+
+<main class="col">
+
+<header class="mast">
+  <p class="kicker">Orientation brief</p>
+  <h1>Inside <em>AI-Native</em> Mortgage</h1>
+  <p class="standfirst">A walk through the Coforge mortgage origination design — what the
+  process does, what the demo is actually showing you, how it is built, and what it would
+  take to run it on real loans.</p>
+  <div class="byline">
+    <span>Reference: Coforge AI-Native Mortgage Demo.html</span>
+    <span>MVP: mvp/index.html</span>
+  </div>
+</header>
+
+<div class="callout warn">
+  <div class="ct">Read this before anything else</div>
+  <p><strong>Neither the reference design nor the MVP contains any AI.</strong> No model runs,
+  no document is read, no loan data leaves the file. Every exception you will see is hardcoded,
+  with its confidence score and its routing decision written in advance. The demo is a
+  <em>deterministic simulation</em> — it plays the same script every time.</p>
+  <p>That is the correct thing for it to be. Its job is to specify the behaviour the real system
+  must have, and to let people see and argue with that behaviour before anyone builds it. But if
+  you present it to a stakeholder who believes they are watching a working system, you will have
+  a credibility problem later. Say "this is the design, running" — not "this is the product".</p>
+</div>
+
+<!-- ==================== 1 ==================== -->
+<section id="p1">
+  <div class="snum">Part 01</div>
+  <h2>The end-to-end process, and what it is for</h2>
+
+  <p class="lede">A mortgage takes roughly six weeks to originate. Very little of that is
+  thinking. Most of it is fetching documents, checking them against rulebooks, noticing what is
+  missing or contradictory, and chasing it down.</p>
+
+  <p>The premise of this solution is that the fetching-and-checking is machine work, and the
+  judgment is human work — and that today those two are tangled together in the same person's
+  inbox. Separate them, and you get speed without giving up control.</p>
+
+  <p>The stated goal is a <strong>cycle time falling from a 43-day baseline toward the high
+  twenties</strong>, achieved not by making people work faster but by never putting mechanical
+  work in front of them in the first place.</p>
+
+  <h3>The five stages</h3>
+  <p>A loan moves through five stages. The MVP covers the first three, which is where the
+  interesting decisions live; the last two are in the reference design and are stubbed for later.</p>
+
+  <div class="breakout">
+    <div class="stages">
+      <div class="stage">
+        <div class="sn">Stage 1</div>
+        <div class="st">Application &amp; Intake</div>
+        <div class="sd">Documents arrive, are classified, and borrower and income fields are extracted.</div>
+      </div>
+      <div class="stage">
+        <div class="sn">Stage 2</div>
+        <div class="st">Loan Processing</div>
+        <div class="sd">Title, appraisal, flood and credit are ordered; the file is checked against the rules engine.</div>
+      </div>
+      <div class="stage">
+        <div class="sn">Stage 3</div>
+        <div class="st">Underwriting</div>
+        <div class="sd">Automated underwriting runs, risk is scored, and a human underwriter decides.</div>
+      </div>
+      <div class="stage dim">
+        <div class="sn">Stage 4</div>
+        <div class="st">Closing &amp; Funding</div>
+        <div class="sd">Disclosure reconciliation, escrow, eSign, wire. In the reference only.</div>
+      </div>
+      <div class="stage dim">
+        <div class="sn">Stage 5</div>
+        <div class="st">Post-Closing QC</div>
+        <div class="sd">Indexing, quality control, investor delivery. In the reference only.</div>
+      </div>
+    </div>
+  </div>
+
+  <h3>The one idea that matters: disposition</h3>
+
+  <p>Everything the system finds wrong with a loan is called an <strong>exception</strong> —
+  a missing document, a number that does not reconcile, a ratio outside policy, a lien on title.
+  Every exception is immediately assigned a <strong>disposition</strong>, and that single field
+  decides whether a machine or a person handles it.</p>
+
+  <div class="breakout">
+    <div class="fork">
+      <div class="fork-top">
+        <span class="box">Exception found</span>
+        <span class="arrow">→</span>
+        <span class="box">confidence + severity</span>
+        <span class="arrow">→</span>
+        <span class="chip s">disposition</span>
+      </div>
+      <div class="lanes">
+        <div class="lane m">
+          <div class="lh">disp: auto</div>
+          <div class="lt">The machine fixes it</div>
+          <p>High confidence, mechanical remedy, no judgment required. The agent performs the
+          repair and closes the exception itself. Nobody is interrupted.</p>
+          <p style="margin-top:9px"><em>Re-run the OCR at higher resolution. Order the flood
+          certificate. Request the missing bank statement.</em></p>
+        </div>
+        <div class="lane h">
+          <div class="lh">disp: hitl</div>
+          <div class="lt">A person decides</div>
+          <p>Human-in-the-loop. The agent has done the analysis and has a recommendation, but the
+          call is a judgment, so it routes to a named analyst's queue with its evidence attached.</p>
+          <ol>
+            <li>Analyst resolves it — verify, recalculate, request a document, or override.</li>
+            <li>If the exception is marked <span class="chip s">requiresSup</span>, the analyst
+            may only <strong>propose</strong>. A supervisor signs off before anything is applied.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p>Two things are worth pausing on, because they are the difference between this and a
+  workflow tool:</p>
+
+  <ul>
+    <li><strong>The system decides what it cannot decide.</strong> Disposition is the machine
+    making a judgment about the limits of its own competence. That is the actual product.</li>
+    <li><strong>High confidence does not mean automatic.</strong> The FHA debt-to-income breach in
+    the demo sits at 79% confidence — the machine is quite sure of the finding — and it still goes
+    to a human, because weighing compensating factors against a policy cap is not a thing you let
+    software do quietly.</li>
+  </ul>
+
+  <h3>Who is allowed to do what</h3>
+  <p>Three human roles, with genuinely different authority. This is not decoration — it is
+  enforced in the code, and every crossing is recorded.</p>
+
+  <dl class="defs">
+    <div class="def"><dt>Analyst ×3</dt><dd>Owns one queue (A, B or C). Resolves cases in
+      <em>their own</em> queue only. Cannot approve their own sign-off items, and cannot see
+      another analyst's work.</dd></div>
+    <div class="def"><dt>Supervisor</dt><dd>Sees every queue. Approves or rejects proposed
+      interventions, and can reassign a case between analysts. Cannot render a credit decision.</dd></div>
+    <div class="def"><dt>Underwriter</dt><dd>Works only in the Underwriters' Digital Hub, on files
+      the agents have already cleaned. Renders the final decision. Does not work the queues.</dd></div>
+  </dl>
+
+  <h3>How a file finishes</h3>
+  <p>A loan becomes <strong>Ready for Underwriting</strong> the moment every exception at stages 1–3
+  is resolved or approved. It is a computed condition, re-evaluated after every single action —
+  not a status somebody sets. When it flips, the file appears in the Underwriters' Hub with its
+  guideline flags, AUS result, conditions checklist and document summaries already assembled.
+  The underwriter approves, approves with conditions, suspends, or denies.</p>
+
+  <p>And every step of that — each prediction, each repair, each routing decision, each approval,
+  each override — writes a timestamped line to an audit trail tagged as either
+  <span class="chip m">AI</span> or <span class="chip h">Human</span>. In a regulated business
+  that record is not a feature; it is the price of admission.</p>
+</section>
+
+<!-- ==================== 2 ==================== -->
+<section id="p2">
+  <div class="snum">Part 02</div>
+  <h2>The demo, its data, and what to point at</h2>
+
+  <p class="lede">The dataset is small and entirely deliberate. Six loans and ten exceptions,
+  engineered so that a single run exercises every branch of the design.</p>
+
+  <p>Between them the six loans cover all four programs (Conventional, FHA, VA, Jumbo), both
+  purchase and refinance, all four severity levels, both dispositions, all three analyst queues,
+  and two cases that require supervisor sign-off. Nothing in the list is filler.</p>
+
+  <h3>The loans</h3>
+  <div class="breakout">
+    <div class="tw">
+      <table>
+        <thead><tr>
+          <th>Loan</th><th>Borrower</th><th>Program</th><th class="num">Amount</th>
+          <th class="num">FICO</th><th class="num">DTI/LTV</th><th>What it demonstrates</th>
+        </tr></thead>
+        <tbody>
+          <tr><td class="mono">LN-…0001</td><td><b>M &amp; S Thompson</b></td><td>Conv Purchase</td>
+            <td class="mono num">$480,000</td><td class="mono num">742</td><td class="mono num">38 / 80</td>
+            <td>Blurred W-2 scan, auto-repaired. Clean straight through.</td></tr>
+          <tr><td class="mono">LN-…0002</td><td><b>David Chen</b></td><td>FHA Refi</td>
+            <td class="mono num">$315,000</td><td class="mono num">681</td><td class="mono num">47 / 91</td>
+            <td><b>The teaching case.</b> Income variance <em>and</em> a DTI breach needing sign-off.</td></tr>
+          <tr><td class="mono">LN-…0003</td><td><b>Maria Garcia</b></td><td>Jumbo Purchase</td>
+            <td class="mono num">$625,000</td><td class="mono num">715</td><td class="mono num">41 / 78</td>
+            <td>Collateral risk — appraisal 6% under contract. Plus an unsourced deposit.</td></tr>
+          <tr><td class="mono">LN-…0004</td><td><b>James Wilson</b></td><td>VA Purchase</td>
+            <td class="mono num">$245,000</td><td class="mono num">698</td><td class="mono num">43 / 100</td>
+            <td>Mixed lanes on one loan — flood cert auto-ordered, AUS referral to a human.</td></tr>
+          <tr><td class="mono">LN-…0005</td><td><b>Emily Davis</b></td><td>Conv Refi</td>
+            <td class="mono num">$410,000</td><td class="mono num">760</td><td class="mono num">33 / 68</td>
+            <td>The happy path. One auto fix, then straight to the Hub.</td></tr>
+          <tr><td class="mono">LN-…0006</td><td><b>Robert Johnson</b></td><td>Conv Purchase</td>
+            <td class="mono num">$530,000</td><td class="mono num">705</td><td class="mono num">44 / 85</td>
+            <td>Critical title lien at 61% confidence. Undisclosed new debt.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <h3>What one run produces</h3>
+  <p>48 scripted events. Three exceptions repaired by machine — <strong>100% of the auto
+  lane</strong>. Seven routed to human queues. Two loans reach the Hub before the scan even
+  finishes. Straight-through rate lands at <strong>33%</strong>: two of the six loans never
+  needed a person at all.</p>
+
+  <div class="callout">
+    <div class="ct">Be careful with these numbers</div>
+    <p>33% straight-through and a 41-day cycle time are properties of a dataset someone chose,
+    not measurements of anything. They exist to make the mechanism legible. If a stakeholder
+    writes them into a business case, that is a misunderstanding worth correcting in the room.</p>
+  </div>
+
+  <h3>The demo path, in order</h3>
+  <ol>
+    <li><strong>Sign in as <span class="mono">analyst1</span></strong> (password
+      <span class="mono">Coforge@123</span>). Press <em>Scan for New Mortgage Loan Requests</em>.</li>
+    <li><strong>Watch the banner and the live log.</strong> Named agents narrate their own work as
+      it happens. Toasts fire as cases route to queues. Use <em>Step</em> to advance one event at a
+      time if you want to talk over it — that control exists precisely for presenting.</li>
+    <li><strong>Two loans go green mid-scan.</strong> Emily Davis and the Thompsons arrive at the
+      Hub without a human touching them. That is the payoff moment; let it land.</li>
+    <li><strong>Open AI Exceptions &amp; HITL.</strong> You see <em>only Queue A</em>. Not a filter —
+      that is the whole screen for an analyst.</li>
+    <li><strong>Work a case.</strong> Every card shows the evidence, the AI's rationale, its
+      recommendation and its confidence. Try <em>Override</em>: it will not submit without a written
+      note. The system will not let a human silently contradict the machine either.</li>
+    <li><strong>Hit the DTI case.</strong> The only button is <em>Propose Fix → Supervisor</em>.
+      This is the moment to explain <span class="chip s">requiresSup</span>.</li>
+    <li><strong>Switch to <span class="mono">supervisor</span></strong> using the role selector.
+      An Approvals tab appears that did not exist a second ago. Approve the proposal and watch the
+      loan advance.</li>
+    <li><strong>Switch to <span class="mono">underwriter</span></strong>. Guideline flags against
+      program caps, the AUS finding, a conditions checklist where agent-cleared items are locked,
+      GenAI document summaries. Render the decision.</li>
+    <li><strong>Finish on the Audit Trail.</strong> Filter by AI, then by Human. Every action,
+      attributed. For a risk or compliance audience, start here instead.</li>
+  </ol>
+
+  <h3>What to emphasise, by room</h3>
+  <div class="people">
+    <div class="person"><div class="pw">Executive / business</div>
+      <div class="pg">Straight-through rate, auto-repair count, cycle-time trend. The dashboard's
+      eight tiles are built for this conversation.</div></div>
+    <div class="person"><div class="pw">Risk &amp; compliance</div>
+      <div class="pg">The audit trail, the sign-off gate, the mandatory override note, and the fact
+      that no agent ever renders a credit decision.</div></div>
+    <div class="person"><div class="pw">Operations</div>
+      <div class="pg">Queue load, SLA meters ageing per severity, supervisor reassignment, and what
+      an analyst's day stops containing.</div></div>
+    <div class="person"><div class="pw">Engineering</div>
+      <div class="pg">The event queue, the computed readiness rule, and role checks living in the
+      state layer rather than the buttons.</div></div>
+  </div>
+</section>
+
+<!-- ==================== 3 ==================== -->
+<section id="p3">
+  <div class="snum">Part 03</div>
+  <h2>The tech stack</h2>
+
+  <p class="lede">There are two artefacts, built very differently and for different reasons.</p>
+
+  <h3>The reference design</h3>
+  <p><span class="mono">Coforge AI-Native Mortgage Demo.html</span> — 886 KB, produced in a visual
+  design canvas rather than hand-written.</p>
+  <dl class="defs">
+    <div class="def"><dt>React 18.3.1</dt><dd>Loaded as UMD bundles; the app is one large
+      <span class="mono">class Component extends DCLogic</span>, roughly 137 KB of logic.</dd></div>
+    <div class="def"><dt>Design system</dt><dd>A bundled component library —
+      <span class="mono">OnboardXSecure</span> — providing Card, StatCard, Badge, Tag, Avatar,
+      ProgressBar, SidebarItem and ten more.</dd></div>
+    <div class="def"><dt>Packaging</dt><dd>A self-extracting bundle: every asset gzipped, base64'd
+      into a manifest, and unpacked by a loader script on open. This is why the file cannot be read
+      directly in an editor.</dd></div>
+    <div class="def"><dt>Typography</dt><dd>Poppins, Mulish and JetBrains Mono, embedded as woff2.</dd></div>
+  </dl>
+
+  <h3>The MVP</h3>
+  <p><span class="mono">mvp/index.html</span> — 97 KB, one file, deliberately primitive.</p>
+  <ul>
+    <li><strong>No dependencies at all.</strong> Vanilla JavaScript. No React, no npm, no build
+      step, no bundler, no CDN scripts. The only external request is the Google Fonts stylesheet.</li>
+    <li><strong>Opens by double-click, works offline, survives being emailed.</strong> That is the
+      entire reason for the constraint. A demo that needs a dev server is a demo that fails in
+      somebody's boardroom.</li>
+    <li><strong>One <span class="mono">App</span> object</strong> holding state, with screens that
+      return HTML strings and a single delegated event handler.</li>
+    <li><strong>The reference's design system, re-implemented in plain CSS</strong> at the same
+      measurements — including its 21-glyph icon set, ported path by path.</li>
+  </ul>
+
+  <div class="callout">
+    <div class="ct">What is not in the stack</div>
+    <p>No backend. No database. No API. No language model. No document storage. No integration with
+    any loan origination system. Both artefacts are front-ends with their data compiled in.</p>
+  </div>
+</section>
+
+<!-- ==================== 4 ==================== -->
+<section id="p4">
+  <div class="snum">Part 04</div>
+  <h2>How the solution is built underneath</h2>
+
+  <p class="lede">The simulation is a small state machine driven by a queue of events. Understanding
+  it takes about five minutes, and it is worth the five minutes, because the production system
+  should keep this shape.</p>
+
+  <h3>The engine</h3>
+  <p>Pressing scan calls <span class="mono">buildScanQueue()</span>, which walks every loan across
+  stages 1–3 and emits a flat list of events. Playback then steps through that list on a timer,
+  applying one event at a time:</p>
+
+  <dl class="defs">
+    <div class="def"><dt>reveal</dt><dd>A loan is ingested. Document Intake Agent logs the borrower,
+      program and amount.</dd></div>
+    <div class="def"><dt>stage</dt><dd>The loan enters a stage. The agent responsible for that stage
+      narrates what it is doing.</dd></div>
+    <div class="def"><dt>predict</dt><dd>Validation Agent finds an exception and records its
+      severity and confidence.</dd></div>
+    <div class="def"><dt>repair → resolve-auto</dt><dd><span class="chip m">auto lane</span>
+      Processing Agent applies the fix; Validation Agent confirms and closes it.</dd></div>
+    <div class="def"><dt>route</dt><dd><span class="chip h">human lane</span> Workflow Orchestration
+      Agent sends the case to the correct analyst queue.</dd></div>
+    <div class="def"><dt>settle</dt><dd>The run ends and readiness is evaluated across the book.</dd></div>
+  </dl>
+
+  <h3>Four decisions worth carrying forward</h3>
+
+  <h4>It is deterministic on purpose</h4>
+  <p>No randomness, and no wall clock inside the engine — timestamps come from a synthetic clock
+  that starts at 09:12:00 every run. The same demo happens every time, which matters when you are
+  presenting, and matters more when you are debugging.</p>
+
+  <h4>Permissions live in the state layer, not the buttons</h4>
+  <p>Hiding a control is not a control. Every function that changes anything re-checks the role
+  before it writes: an analyst cannot touch another queue's case even by calling the function
+  directly, a supervisor cannot render a credit decision, an underwriter cannot work a queue.
+  This is deliberate rehearsal for the production rule — <strong>the tool refuses, not the
+  interface</strong> — because an LLM-driven agent will eventually be the thing calling these
+  functions, and it will not be looking at your buttons.</p>
+
+  <h4>Readiness is derived, never assigned</h4>
+  <p>Nothing marks a loan ready. A rule re-runs after every action and decides. Derived state
+  cannot drift out of sync with the facts underneath it.</p>
+
+  <h4>Nothing changes without an audit line</h4>
+  <p>Every mutation writes to both the live log and the audit trail, tagged AI or human. It is an
+  invariant, not a convention.</p>
+
+  <h3>The agents, as currently defined</h3>
+  <p>Seven named agents. Today each one is a label on log lines — but the naming is the
+  specification, and each becomes a real agent with a prompt, a toolset and an escalation rule.</p>
+
+  <div class="breakout">
+    <div class="tw">
+      <table>
+        <thead><tr><th>Agent</th><th>Responsibility</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">Supervisor Agent</td><td>Starts runs, declares files ready, closes out</td></tr>
+          <tr><td class="mono">Document Intake Agent</td><td>Ingests files, classifies documents, extracts borrower and income fields</td></tr>
+          <tr><td class="mono">Processing Agent</td><td>Orders title, appraisal, flood and credit; executes auto-repairs</td></tr>
+          <tr><td class="mono">Validation Agent</td><td>Runs the rules engine, predicts exceptions, confirms resolutions</td></tr>
+          <tr><td class="mono">Risk / AUS Scoring</td><td>Computes DTI and LTV, pulls the automated underwriting finding</td></tr>
+          <tr><td class="mono">Workflow Orchestration Agent</td><td>Routes human-lane cases to the right queue</td></tr>
+          <tr><td class="mono">Loan Delivery Agent</td><td>Closing, funding, QC, investor delivery <span class="chip n">stage 4–5</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <p>Alongside the code there is a <strong>skill file</strong> at
+  <span class="mono">.claude/skills/ai-native-mortgage/</span> holding the domain model, the agent
+  roster, the design tokens, the full seed dataset and the conventions above — so the next stage of
+  work builds on the same vocabulary rather than reinventing it.</p>
+</section>
+
+<!-- ==================== 5 ==================== -->
+<section id="p5">
+  <div class="snum">Part 05</div>
+  <h2>What production would actually require</h2>
+
+  <p class="lede">This is the honest part. Going from this design to a system that touches real
+  loans is not a matter of connecting an API. Most of the work has not started.</p>
+
+  <h3>Replace simulated agents with real ones</h3>
+  <p>Each of the seven becomes an LLM-backed agent with a system prompt, a defined toolset, and an
+  explicit escalation rule. Document extraction pairs a document-intelligence service with a model
+  that reasons over what it extracted. Validation pairs a deterministic rules engine — agency
+  guidelines are rules, and rules should be code — with a model for the ambiguity the rules do not
+  cover.</p>
+
+  <div class="callout">
+    <div class="ct">The single highest-leverage decision in the build</div>
+    <p>Today, confidence scores are typed into the seed data. In production a model produces them,
+    and the threshold separating <span class="chip m">auto</span> from
+    <span class="chip h">hitl</span> becomes the most consequential number in the system. Set it
+    too high and you have automated nothing. Set it too low and the machine is quietly making
+    decisions it should not. That threshold needs a labelled evaluation set and measured precision
+    per exception type — not a guess, and never one global number.</p>
+  </div>
+
+  <h3>Build the tool layer</h3>
+  <p>Agents act through tools, and each tool declares its side effects and whether it requires
+  human confirmation: read and write loan data in the origination system; retrieve and store
+  documents; submit to automated underwriting; order title, appraisal, flood and credit from
+  vendors; evaluate the rules engine; send borrower outreach. Anything that spends money or touches
+  a borrower is confirmation-gated by default.</p>
+
+  <h3>Make the orchestration durable</h3>
+  <p>An in-memory event queue is fine for 48 events over 30 seconds. A real loan lives for six
+  weeks, spans dozens of human handoffs, and must survive deployments. That means a durable
+  workflow engine, real work queues with assignment and SLA timers and escalation, an append-only
+  audit store, a relational store for loan and exception state, and an object store for documents.</p>
+
+  <h3>Satisfy the regulatory surface</h3>
+  <p>This is lending, so this section is not optional and is larger than the engineering.</p>
+  <ul>
+    <li><strong>Sensitive personal data throughout</strong> — social security numbers, income,
+      bank statements. Encryption in transit and at rest, field-level for the worst of it, and
+      strict handling of what is sent to a model provider.</li>
+    <li><strong>Adverse action reasoning.</strong> If a loan is declined, the borrower is entitled
+      to specific principal reasons. Any AI contribution to that path must be explainable in those
+      terms, or must be kept out of that path.</li>
+    <li><strong>Fair lending.</strong> The largest exposure. Anything influencing credit outcomes
+      needs bias testing before launch and disparate-impact monitoring after it, on live decisions.</li>
+    <li><strong>Model risk governance.</strong> A model inventory, independent validation, ongoing
+      performance monitoring, and a documented owner — the same discipline any other credit model
+      carries.</li>
+  </ul>
+  <p>The design already gets the most important thing right, and it should be defended in every
+  review: <strong>no agent renders a credit decision.</strong> Agents prepare files. People decide.</p>
+
+  <h3>Measure it before trusting it</h3>
+  <p>Assemble a golden set of historical loans with known outcomes, and track: <em>auto-repair
+  precision</em> — how often an automatic fix was wrong, the number that should keep you up at
+  night; <em>routing recall</em> — how often something that needed a human did not get one;
+  extraction accuracy field by field; analyst handling time; and end-to-end cycle time against a
+  measured baseline rather than an assumed one.</p>
+
+  <h3>A rollout that earns trust in order</h3>
+  <div class="phases">
+    <div class="phase live">
+      <div class="pn">Done</div>
+      <div class="pt">Design and demonstrable MVP</div>
+      <p>The behaviour is specified, visible, and arguable. Where we are today.</p>
+    </div>
+    <div class="phase">
+      <div class="pn">Phase 1</div>
+      <div class="pt">Shadow mode</div>
+      <p>Agents run beside the existing team on live files. Nobody acts on their output. Compare
+      agent findings to what humans actually did, and calibrate confidence against that.</p>
+    </div>
+    <div class="phase">
+      <div class="pn">Phase 2</div>
+      <div class="pt">Routing and queues, no automation</div>
+      <p>Agents predict and route; every case still goes to a person. This alone removes triage
+      work and proves the routing before any automatic action exists.</p>
+    </div>
+    <div class="phase">
+      <div class="pn">Phase 3</div>
+      <div class="pt">A narrow auto lane</div>
+      <p>Automate only the two or three highest-precision mechanical exception types — ordering a
+      flood certificate, requesting a lapsed insurance page. Each behind its own switch, each
+      individually revocable.</p>
+    </div>
+    <div class="phase">
+      <div class="pn">Phase 4</div>
+      <div class="pt">Hub assembly</div>
+      <p>Agents assemble the decision-ready file and draft document summaries. Advisory only —
+      the underwriter still reads the source.</p>
+    </div>
+    <div class="phase">
+      <div class="pn">Phase 5</div>
+      <div class="pt">Widen on evidence</div>
+      <p>Expand the auto lane exception type by exception type, each promotion justified by
+      measured precision. Extend into closing and post-closing.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== 6 ==================== -->
+<section id="p6">
+  <div class="snum">Part 06</div>
+  <h2>Where this sits, and what it changes for people</h2>
+
+  <p class="lede">Automation has come to mortgage operations twice already. Understanding why those
+  waves stalled explains what is different here.</p>
+
+  <div class="gen">
+    <div class="grow">
+      <div class="gl">First wave</div>
+      <div class="gd"><b>Robotic process automation.</b> Scripts clicking through screens. Fast to
+      build, brittle by nature — a vendor changes a PDF layout and the robot breaks silently.</div>
+    </div>
+    <div class="grow">
+      <div class="gl">Second wave</div>
+      <div class="gd"><b>Point machine learning.</b> A model for document classification, another
+      for extraction. Genuinely useful and narrow. Each one still hands a human a pile of output
+      to reconcile.</div>
+    </div>
+    <div class="grow now">
+      <div class="gl">This design</div>
+      <div class="gd"><b>Agentic.</b> Agents that reason across documents and rulebooks, act
+      through tools, and — the part that matters — <b>recognise the edge of their own
+      competence</b> and hand off with the evidence attached.</div>
+    </div>
+  </div>
+
+  <p>The distinguishing capability is not that it reads documents. It is that it knows which
+  findings it should not act on, and routes those to the right person with its reasoning shown.
+  A workflow tool routes what you told it to route. This decides what routing is warranted.</p>
+
+  <h3>Human-in-the-loop is the product, not a limitation</h3>
+  <p>It is tempting to treat the human queues as scaffolding to be removed once the models improve.
+  That reading is wrong on two counts. Legally, full autonomy over credit decisions is not
+  obviously permissible and certainly not defensible today. Commercially, the value is already
+  captured in the confident majority — routing the remainder correctly and fast <em>is</em> the
+  differentiator, not a consolation.</p>
+
+  <p>Trust is built by making reasoning inspectable. Every exception card carries the evidence
+  snapshot, the rationale, the recommendation and the confidence figure — the human sees what the
+  machine saw, and can disagree with it on the record.</p>
+
+  <h3>What changes for each stakeholder</h3>
+  <div class="people">
+    <div class="person"><div class="pw">Borrower</div>
+      <div class="pg">Closes sooner, and is asked for the same document fewer times.</div></div>
+    <div class="person"><div class="pw">Loan officer</div>
+      <div class="pg">Fewer files stalling invisibly; earlier warning when one is in trouble.</div></div>
+    <div class="person"><div class="pw">Pre-underwriting analyst</div>
+      <div class="pg">Stops chasing paper and starts working exceptions that need reasoning.
+      Worth saying plainly in the room: this design redirects the role, it does not delete it.</div></div>
+    <div class="person"><div class="pw">Underwriter</div>
+      <div class="pg">Receives assembled, decision-ready files instead of raw ones. Their scarce
+      time goes to the decision rather than to preparing for it.</div></div>
+    <div class="person"><div class="pw">Supervisor</div>
+      <div class="pg">Live queue load and SLA ageing, the ability to rebalance, and a sign-off gate
+      on everything consequential.</div></div>
+    <div class="person"><div class="pw">Risk &amp; compliance</div>
+      <div class="pg">A complete, attributable record of who — or what — did each thing, and when.
+      For this audience the audit trail <em>is</em> the product.</div></div>
+    <div class="person"><div class="pw">Operations leadership</div>
+      <div class="pg">Cost per loan and cycle time move without adding headcount; capacity becomes
+      elastic against volume swings.</div></div>
+    <div class="person"><div class="pw">Investors &amp; regulators</div>
+      <div class="pg">Provenance for every decision in the file, which is increasingly what
+      diligence actually asks for.</div></div>
+  </div>
+
+  <h3>Risks worth naming out loud</h3>
+  <ul>
+    <li><strong>Confident wrong extraction is worse than no extraction.</strong> Every extracted
+      field must be traceable to a location in a source document, so a human can check it in
+      seconds rather than re-reading the file.</li>
+    <li><strong>Automation bias.</strong> Show people a recommendation and they approve it. The
+      countermeasure is interface design — lead with the evidence, never pre-select the decision,
+      and require a written note for an override. The MVP already does the last of these.</li>
+    <li><strong>Fair lending exposure</strong> compounds silently and surfaces in an examination.
+      Monitoring belongs in the first production release, not a later one.</li>
+    <li><strong>Concentration risk</strong> on a single model provider, for a process that cannot
+      stop.</li>
+  </ul>
+
+  <h3>Where it goes next</h3>
+  <p>Confidence thresholds that tune themselves as outcome data accumulates. Agents that surface
+  recurring guideline ambiguities back to the policy team. A borrower-facing agent that collects
+  documents conversationally instead of by email. And the two remaining stages — closing and
+  post-closing — which the reference design has already mapped and which are waiting to be built.</p>
+</section>
+
+<footer>
+  <span>Orientation brief</span>
+  <span>Coforge AI-Native Mortgage</span>
+  <span>Design + MVP stage — agents, tools and harness still to come</span>
+</footer>
+
+</main>
+</div>

@@ -1,0 +1,1213 @@
+{
+  "generated": "2026-08-20",
+  "seed": 20260820,
+  "market_data_as_of": "2026-08-20",
+  "loans": [
+    {
+      "id": "LN-2026-0001",
+      "borrowers": "Michael & Sarah Thompson",
+      "metro": "Austin, TX",
+      "program": "Conv",
+      "purpose": "Purchase",
+      "amount": 412000,
+      "property_value": 515000,
+      "fico": 742,
+      "ltv": 80.0,
+      "dti": 38.0,
+      "note_rate": 6.67,
+      "monthly_income": 10309.04,
+      "piti": 3277.44,
+      "other_debts": 640,
+      "conforming_limit": 832750,
+      "is_jumbo": false,
+      "documents": [
+        {
+          "doc_id": "LN-2026-0001-urla",
+          "kind": "urla",
+          "path": "documents\\LN-2026-0001\\urla.txt",
+          "chars": 859
+        },
+        {
+          "doc_id": "LN-2026-0001-id",
+          "kind": "id",
+          "path": "documents\\LN-2026-0001\\id.txt",
+          "chars": 190
+        },
+        {
+          "doc_id": "LN-2026-0001-w2",
+          "kind": "w2",
+          "path": "documents\\LN-2026-0001\\w2.txt",
+          "chars": 358
+        },
+        {
+          "doc_id": "LN-2026-0001-paystub",
+          "kind": "paystub",
+          "path": "documents\\LN-2026-0001\\paystub.txt",
+          "chars": 286
+        },
+        {
+          "doc_id": "LN-2026-0001-bank_statement",
+          "kind": "bank_statement",
+          "path": "documents\\LN-2026-0001\\bank_statement.txt",
+          "chars": 574
+        },
+        {
+          "doc_id": "LN-2026-0001-credit_report",
+          "kind": "credit_report",
+          "path": "documents\\LN-2026-0001\\credit_report.txt",
+          "chars": 272
+        },
+        {
+          "doc_id": "LN-2026-0001-appraisal",
+          "kind": "appraisal",
+          "path": "documents\\LN-2026-0001\\appraisal.txt",
+          "chars": 260
+        },
+        {
+          "doc_id": "LN-2026-0001-title_commitment",
+          "kind": "title_commitment",
+          "path": "documents\\LN-2026-0001\\title_commitment.txt",
+          "chars": 240
+        },
+        {
+          "doc_id": "LN-2026-0001-hoi",
+          "kind": "hoi",
+          "path": "documents\\LN-2026-0001\\hoi.txt",
+          "chars": 266
+        },
+        {
+          "doc_id": "LN-2026-0001-flood_cert",
+          "kind": "flood_cert",
+          "path": "documents\\LN-2026-0001\\flood_cert.txt",
+          "chars": 225
+        },
+        {
+          "doc_id": "LN-2026-0001-loan_estimate",
+          "kind": "loan_estimate",
+          "path": "documents\\LN-2026-0001\\loan_estimate.txt",
+          "chars": 591
+        },
+        {
+          "doc_id": "LN-2026-0001-closing_disclosure",
+          "kind": "closing_disclosure",
+          "path": "documents\\LN-2026-0001\\closing_disclosure.txt",
+          "chars": 742
+        },
+        {
+          "doc_id": "LN-2026-0001-aus_findings",
+          "kind": "aus_findings",
+          "path": "documents\\LN-2026-0001\\aus_findings.txt",
+          "chars": 291
+        }
+      ]
+    },
+    {
+      "id": "LN-2026-0002",
+      "borrowers": "David Chen",
+      "metro": "Phoenix, AZ",
+      "program": "FHA",
+      "purpose": "Refi",
+      "amount": 338000,
+      "property_value": 371429,
+      "fico": 681,
+      "ltv": 91.0,
+      "dti": 47.0,
+      "note_rate": 6.29,
+      "monthly_income": 7926.21,
+      "piti": 2740.32,
+      "other_debts": 985,
+      "conforming_limit": 832750,
+      "is_jumbo": false,
+      "documents": [
+        {
+          "doc_id": "LN-2026-0002-urla",
+          "kind": "urla",
+          "path": "documents\\LN-2026-0002\\urla.txt",
+          "chars": 840
+        },
+        {
+          "doc_id": "LN-2026-0002-id",
+          "kind": "id",
+          "path": "documents\\LN-2026-0002\\id.txt",
+          "chars": 193
+        },
+        {
+          "doc_id": "LN-2026-0002-w2",
+          "kind": "w2",
+          "path": "documents\\LN-2026-0002\\w2.txt",
+          "chars": 319
+        },
+        {
+          "doc_id": "LN-2026-0002-paystub",
+          "kind": "paystub",
+          "path": "documents\\LN-2026-0002\\paystub.txt",
+          "chars": 289
+        },
+        {
+          "doc_id": "LN-2026-0002-bank_statement",
+          "kind": "bank_statement",
+          "path": "documents\\LN-2026-0002\\bank_statement.txt",
+          "chars": 560
+        },
+        {
+          "doc_id": "LN-2026-0002-credit_report",
+          "kind": "credit_report",
+          "path": "documents\\LN-2026-0002\\credit_report.txt",
+          "chars": 276
+        },
+        {
+          "doc_id": "LN-2026-0002-appraisal",
+          "kind": "appraisal",
+          "path": "documents\\LN-2026-0002\\appraisal.txt",
+          "chars": 261
+        },
+        {
+          "doc_id": "LN-2026-0002-title_commitment",
+          "kind": "title_commitment",
+          "path": "documents\\LN-2026-0002\\title_commitment.txt",
+          "chars": 227
+        },
+        {
+          "doc_id": "LN-2026-0002-hoi",
+          "kind": "hoi",
+          "path": "documents\\LN-2026-0002\\hoi.txt",
+          "chars": 252
+        },
+        {
+          "doc_id": "LN-2026-0002-flood_cert",
+          "kind": "flood_cert",
+          "path": "documents\\LN-2026-0002\\flood_cert.txt",
+          "chars": 226
+        },
+        {
+          "doc_id": "LN-2026-0002-loan_estimate",
+          "kind": "loan_estimate",
+          "path": "documents\\LN-2026-0002\\loan_estimate.txt",
+          "chars": 590
+        },
+        {
+          "doc_id": "LN-2026-0002-closing_disclosure",
+          "kind": "closing_disclosure",
+          "path": "documents\\LN-2026-0002\\closing_disclosure.txt",
+          "chars": 741
+        },
+        {
+          "doc_id": "LN-2026-0002-aus_findings",
+          "kind": "aus_findings",
+          "path": "documents\\LN-2026-0002\\aus_findings.txt",
+          "chars": 293
+        },
+        {
+          "doc_id": "LN-2026-0002-fha_case",
+          "kind": "fha_case",
+          "path": "documents\\LN-2026-0002\\fha_case.txt",
+          "chars": 177
+        }
+      ]
+    },
+    {
+      "id": "LN-2026-0003",
+      "borrowers": "Maria Garcia",
+      "metro": "San Diego, CA",
+      "program": "Jumbo",
+      "purpose": "Purchase",
+      "amount": 1285000,
+      "property_value": 1713333,
+      "fico": 748,
+      "ltv": 75.0,
+      "dti": 39.0,
+      "note_rate": 6.74,
+      "monthly_income": 29491.03,
+      "piti": 10051.5,
+      "other_debts": 1450,
+      "conforming_limit": 1104100,
+      "is_jumbo": true,
+      "documents": [
+        {
+          "doc_id": "LN-2026-0003-urla",
+          "kind": "urla",
+          "path": "documents\\LN-2026-0003\\urla.txt",
+          "chars": 859
+        },
+        {
+          "doc_id": "LN-2026-0003-id",
+          "kind": "id",
+          "path": "documents\\LN-2026-0003\\id.txt",
+          "chars": 195
+        },
+        {
+          "doc_id": "LN-2026-0003-w2",
+          "kind": "w2",
+          "path": "documents\\LN-2026-0003\\w2.txt",
+          "chars": 325
+        },
+        {
+          "doc_id": "LN-2026-0003-paystub",
+          "kind": "paystub",
+          "path": "documents\\LN-2026-0003\\paystub.txt",
+          "chars": 295
+        },
+        {
+          "doc_id": "LN-2026-0003-bank_statement",
+          "kind": "bank_statement",
+          "path": "documents\\LN-2026-0003\\bank_statement.txt",
+          "chars": 633
+        },
+        {
+          "doc_id": "LN-2026-0003-credit_report",
+          "kind": "credit_report",
+          "path": "documents\\LN-2026-0003\\credit_report.txt",
+          "chars": 280
+        },
+        {
+          "doc_id": "LN-2026-0003-appraisal",
+          "kind": "appraisal",
+          "path": "documents\\LN-2026-0003\\appraisal.txt",
+          "chars": 271
+        },
+        {
+          "doc_id": "LN-2026-0003-title_commitment",
+          "kind": "title_commitment",
+          "path": "documents\\LN-2026-0003\\title_commitment.txt",
+          "chars": 233
+        },
+        {
+          "doc_id": "LN-2026-0003-hoi",
+          "kind": "hoi",
+          "path": "documents\\LN-2026-0003\\hoi.txt",
+          "chars": 256
+        },
+        {
+          "doc_id": "LN-2026-0003-flood_cert",
+          "kind": "flood_cert",
+          "path": "documents\\LN-2026-0003\\flood_cert.txt",
+          "chars": 228
+        },
+        {
+          "doc_id": "LN-2026-0003-loan_estimate",
+          "kind": "loan_estimate",
+          "path": "documents\\LN-2026-0003\\loan_estimate.txt",
+          "chars": 593
+        },
+        {
+          "doc_id": "LN-2026-0003-closing_disclosure",
+          "kind": "closing_disclosure",
+          "path": "documents\\LN-2026-0003\\closing_disclosure.txt",
+          "chars": 744
+        },
+        {
+          "doc_id": "LN-2026-0003-lox",
+          "kind": "lox",
+          "path": "documents\\LN-2026-0003\\lox.txt",
+          "chars": 1022
+        },
+        {
+          "doc_id": "LN-2026-0003-aus_findings",
+          "kind": "aus_findings",
+          "path": "documents\\LN-2026-0003\\aus_findings.txt",
+          "chars": 291
+        }
+      ]
+    },
+    {
+      "id": "LN-2026-0004",
+      "borrowers": "James Wilson",
+      "metro": "Tampa, FL",
+      "program": "VA",
+      "purpose": "Purchase",
+      "amount": 352000,
+      "property_value": 352000,
+      "fico": 698,
+      "ltv": 100.0,
+      "dti": 43.0,
+      "note_rate": 6.21,
+      "monthly_income": 7804.28,
+      "piti": 2635.84,
+      "other_debts": 720,
+      "conforming_limit": 832750,
+      "is_jumbo": false,
+      "documents": [
+        {
+          "doc_id": "LN-2026-0004-urla",
+          "kind": "urla",
+          "path": "documents\\LN-2026-0004\\urla.txt",
+          "chars": 843
+        },
+        {
+          "doc_id": "LN-2026-0004-id",
+          "kind": "id",
+          "path": "documents\\LN-2026-0004\\id.txt",
+          "chars": 195
+        },
+        {
+          "doc_id": "LN-2026-0004-w2",
+          "kind": "w2",
+          "path": "documents\\LN-2026-0004\\w2.txt",
+          "chars": 319
+        },
+        {
+          "doc_id": "LN-2026-0004-paystub",
+          "kind": "paystub",
+          "path": "documents\\LN-2026-0004\\paystub.txt",
+          "chars": 289
+        },
+        {
+          "doc_id": "LN-2026-0004-bank_statement",
+          "kind": "bank_statement",
+          "path": "documents\\LN-2026-0004\\bank_statement.txt",
+          "chars": 562
+        },
+        {
+          "doc_id": "LN-2026-0004-credit_report",
+          "kind": "credit_report",
+          "path": "documents\\LN-2026-0004\\credit_report.txt",
+          "chars": 277
+        },
+        {
+          "doc_id": "LN-2026-0004-appraisal",
+          "kind": "appraisal",
+          "path": "documents\\LN-2026-0004\\appraisal.txt",
+          "chars": 259
+        },
+        {
+          "doc_id": "LN-2026-0004-title_commitment",
+          "kind": "title_commitment",
+          "path": "documents\\LN-2026-0004\\title_commitment.txt",
+          "chars": 227
+        },
+        {
+          "doc_id": "LN-2026-0004-hoi",
+          "kind": "hoi",
+          "path": "documents\\LN-2026-0004\\hoi.txt",
+          "chars": 254
+        },
+        {
+          "doc_id": "LN-2026-0004-flood_cert",
+          "kind": "flood_cert",
+          "path": "documents\\LN-2026-0004\\flood_cert.txt",
+          "chars": 111
+        },
+        {
+          "doc_id": "LN-2026-0004-loan_estimate",
+          "kind": "loan_estimate",
+          "path": "documents\\LN-2026-0004\\loan_estimate.txt",
+          "chars": 590
+        },
+        {
+          "doc_id": "LN-2026-0004-closing_disclosure",
+          "kind": "closing_disclosure",
+          "path": "documents\\LN-2026-0004\\closing_disclosure.txt",
+          "chars": 741
+        },
+        {
+          "doc_id": "LN-2026-0004-aus_findings",
+          "kind": "aus_findings",
+          "path": "documents\\LN-2026-0004\\aus_findings.txt",
+          "chars": 290
+        },
+        {
+          "doc_id": "LN-2026-0004-coe",
+          "kind": "coe",
+          "path": "documents\\LN-2026-0004\\coe.txt",
+          "chars": 207
+        }
+      ]
+    },
+    {
+      "id": "LN-2026-0005",
+      "borrowers": "Emily Davis",
+      "metro": "Denver, CO",
+      "program": "Conv",
+      "purpose": "Refi",
+      "amount": 432000,
+      "property_value": 635294,
+      "fico": 760,
+      "ltv": 68.0,
+      "dti": 33.0,
+      "note_rate": 6.67,
+      "monthly_income": 11898.07,
+      "piti": 3516.36,
+      "other_debts": 410,
+      "conforming_limit": 832750,
+      "is_jumbo": false,
+      "documents": [
+        {
+          "doc_id": "LN-2026-0005-urla",
+          "kind": "urla",
+          "path": "documents\\LN-2026-0005\\urla.txt",
+          "chars": 843
+        },
+        {
+          "doc_id": "LN-2026-0005-id",
+          "kind": "id",
+          "path": "documents\\LN-2026-0005\\id.txt",
+          "chars": 194
+        },
+        {
+          "doc_id": "LN-2026-0005-w2",
+          "kind": "w2",
+          "path": "documents\\LN-2026-0005\\w2.txt",
+          "chars": 324
+        },
+        {
+          "doc_id": "LN-2026-0005-paystub",
+          "kind": "paystub",
+          "path": "documents\\LN-2026-0005\\paystub.txt",
+          "chars": 291
+        },
+        {
+          "doc_id": "LN-2026-0005-bank_statement",
+          "kind": "bank_statement",
+          "path": "documents\\LN-2026-0005\\bank_statement.txt",
+          "chars": 561
+        },
+        {
+          "doc_id": "LN-2026-0005-credit_report",
+          "kind": "credit_report",
+          "path": "documents\\LN-2026-0005\\credit_report.txt",
+          "chars": 276
+        },
+        {
+          "doc_id": "LN-2026-0005-appraisal",
+          "kind": "appraisal",
+          "path": "documents\\LN-2026-0005\\appraisal.txt",
+          "chars": 260
+        },
+        {
+          "doc_id": "LN-2026-0005-title_commitment",
+          "kind": "title_commitment",
+          "path": "documents\\LN-2026-0005\\title_commitment.txt",
+          "chars": 227
+        },
+        {
+          "doc_id": "LN-2026-0005-hoi",
+          "kind": "hoi",
+          "path": "documents\\LN-2026-0005\\hoi.txt",
+          "chars": 253
+        },
+        {
+          "doc_id": "LN-2026-0005-flood_cert",
+          "kind": "flood_cert",
+          "path": "documents\\LN-2026-0005\\flood_cert.txt",
+          "chars": 333
+        },
+        {
+          "doc_id": "LN-2026-0005-loan_estimate",
+          "kind": "loan_estimate",
+          "path": "documents\\LN-2026-0005\\loan_estimate.txt",
+          "chars": 591
+        },
+        {
+          "doc_id": "LN-2026-0005-closing_disclosure",
+          "kind": "closing_disclosure",
+          "path": "documents\\LN-2026-0005\\closing_disclosure.txt",
+          "chars": 742
+        },
+        {
+          "doc_id": "LN-2026-0005-aus_findings",
+          "kind": "aus_findings",
+          "path": "documents\\LN-2026-0005\\aus_findings.txt",
+          "chars": 291
+        }
+      ]
+    },
+    {
+      "id": "LN-2026-0006",
+      "borrowers": "Robert Johnson",
+      "metro": "Seattle, WA",
+      "program": "Conv",
+      "purpose": "Purchase",
+      "amount": 690000,
+      "property_value": 811765,
+      "fico": 705,
+      "ltv": 85.0,
+      "dti": 44.0,
+      "note_rate": 6.67,
+      "monthly_income": 15762.08,
+      "piti": 5625.31,
+      "other_debts": 1310,
+      "conforming_limit": 1069350,
+      "is_jumbo": false,
+      "documents": [
+        {
+          "doc_id": "LN-2026-0006-urla",
+          "kind": "urla",
+          "path": "documents\\LN-2026-0006\\urla.txt",
+          "chars": 847
+        },
+        {
+          "doc_id": "LN-2026-0006-id",
+          "kind": "id",
+          "path": "documents\\LN-2026-0006\\id.txt",
+          "chars": 197
+        },
+        {
+          "doc_id": "LN-2026-0006-w2",
+          "kind": "w2",
+          "path": "documents\\LN-2026-0006\\w2.txt",
+          "chars": 321
+        },
+        {
+          "doc_id": "LN-2026-0006-paystub",
+          "kind": "paystub",
+          "path": "documents\\LN-2026-0006\\paystub.txt",
+          "chars": 289
+        },
+        {
+          "doc_id": "LN-2026-0006-bank_statement",
+          "kind": "bank_statement",
+          "path": "documents\\LN-2026-0006\\bank_statement.txt",
+          "chars": 564
+        },
+        {
+          "doc_id": "LN-2026-0006-credit_report",
+          "kind": "credit_report",
+          "path": "documents\\LN-2026-0006\\credit_report.txt",
+          "chars": 404
+        },
+        {
+          "doc_id": "LN-2026-0006-appraisal",
+          "kind": "appraisal",
+          "path": "documents\\LN-2026-0006\\appraisal.txt",
+          "chars": 261
+        },
+        {
+          "doc_id": "LN-2026-0006-title_commitment",
+          "kind": "title_commitment",
+          "path": "documents\\LN-2026-0006\\title_commitment.txt",
+          "chars": 476
+        },
+        {
+          "doc_id": "LN-2026-0006-hoi",
+          "kind": "hoi",
+          "path": "documents\\LN-2026-0006\\hoi.txt",
+          "chars": 256
+        },
+        {
+          "doc_id": "LN-2026-0006-flood_cert",
+          "kind": "flood_cert",
+          "path": "documents\\LN-2026-0006\\flood_cert.txt",
+          "chars": 226
+        },
+        {
+          "doc_id": "LN-2026-0006-loan_estimate",
+          "kind": "loan_estimate",
+          "path": "documents\\LN-2026-0006\\loan_estimate.txt",
+          "chars": 591
+        },
+        {
+          "doc_id": "LN-2026-0006-closing_disclosure",
+          "kind": "closing_disclosure",
+          "path": "documents\\LN-2026-0006\\closing_disclosure.txt",
+          "chars": 742
+        },
+        {
+          "doc_id": "LN-2026-0006-aus_findings",
+          "kind": "aus_findings",
+          "path": "documents\\LN-2026-0006\\aus_findings.txt",
+          "chars": 291
+        }
+      ]
+    },
+    {
+      "id": "LN-2026-0007",
+      "borrowers": "Aisha Khan",
+      "metro": "Atlanta, GA",
+      "program": "FHA",
+      "purpose": "Purchase",
+      "amount": 312000,
+      "property_value": 323316,
+      "fico": 688,
+      "ltv": 96.5,
+      "dti": 41.0,
+      "note_rate": 6.29,
+      "monthly_income": 7837.89,
+      "piti": 2523.53,
+      "other_debts": 690,
+      "conforming_limit": 832750,
+      "is_jumbo": false,
+      "documents": [
+        {
+          "doc_id": "LN-2026-0007-urla",
+          "kind": "urla",
+          "path": "documents\\LN-2026-0007\\urla.txt",
+          "chars": 845
+        },
+        {
+          "doc_id": "LN-2026-0007-id",
+          "kind": "id",
+          "path": "documents\\LN-2026-0007\\id.txt",
+          "chars": 193
+        },
+        {
+          "doc_id": "LN-2026-0007-w2",
+          "kind": "w2",
+          "path": "documents\\LN-2026-0007\\w2.txt",
+          "chars": 320
+        },
+        {
+          "doc_id": "LN-2026-0007-paystub",
+          "kind": "paystub",
+          "path": "documents\\LN-2026-0007\\paystub.txt",
+          "chars": 290
+        },
+        {
+          "doc_id": "LN-2026-0007-credit_report",
+          "kind": "credit_report",
+          "path": "documents\\LN-2026-0007\\credit_report.txt",
+          "chars": 275
+        },
+        {
+          "doc_id": "LN-2026-0007-appraisal",
+          "kind": "appraisal",
+          "path": "documents\\LN-2026-0007\\appraisal.txt",
+          "chars": 261
+        },
+        {
+          "doc_id": "LN-2026-0007-title_commitment",
+          "kind": "title_commitment",
+          "path": "documents\\LN-2026-0007\\title_commitment.txt",
+          "chars": 227
+        },
+        {
+          "doc_id": "LN-2026-0007-hoi",
+          "kind": "hoi",
+          "path": "documents\\LN-2026-0007\\hoi.txt",
+          "chars": 252
+        },
+        {
+          "doc_id": "LN-2026-0007-flood_cert",
+          "kind": "flood_cert",
+          "path": "documents\\LN-2026-0007\\flood_cert.txt",
+          "chars": 226
+        },
+        {
+          "doc_id": "LN-2026-0007-loan_estimate",
+          "kind": "loan_estimate",
+          "path": "documents\\LN-2026-0007\\loan_estimate.txt",
+          "chars": 590
+        },
+        {
+          "doc_id": "LN-2026-0007-closing_disclosure",
+          "kind": "closing_disclosure",
+          "path": "documents\\LN-2026-0007\\closing_disclosure.txt",
+          "chars": 741
+        },
+        {
+          "doc_id": "LN-2026-0007-aus_findings",
+          "kind": "aus_findings",
+          "path": "documents\\LN-2026-0007\\aus_findings.txt",
+          "chars": 293
+        },
+        {
+          "doc_id": "LN-2026-0007-fha_case",
+          "kind": "fha_case",
+          "path": "documents\\LN-2026-0007\\fha_case.txt",
+          "chars": 177
+        }
+      ]
+    },
+    {
+      "id": "LN-2026-0008",
+      "borrowers": "Daniel & Rachel Brooks",
+      "metro": "Boston, MA",
+      "program": "Jumbo",
+      "purpose": "Refi",
+      "amount": 1050000,
+      "property_value": 1500000,
+      "fico": 772,
+      "ltv": 70.0,
+      "dti": 36.0,
+      "note_rate": 6.74,
+      "monthly_income": 26259.17,
+      "piti": 8333.3,
+      "other_debts": 1120,
+      "conforming_limit": 920500,
+      "is_jumbo": true,
+      "documents": [
+        {
+          "doc_id": "LN-2026-0008-urla",
+          "kind": "urla",
+          "path": "documents\\LN-2026-0008\\urla.txt",
+          "chars": 859
+        },
+        {
+          "doc_id": "LN-2026-0008-id",
+          "kind": "id",
+          "path": "documents\\LN-2026-0008\\id.txt",
+          "chars": 189
+        },
+        {
+          "doc_id": "LN-2026-0008-w2",
+          "kind": "w2",
+          "path": "documents\\LN-2026-0008\\w2.txt",
+          "chars": 317
+        },
+        {
+          "doc_id": "LN-2026-0008-paystub",
+          "kind": "paystub",
+          "path": "documents\\LN-2026-0008\\paystub.txt",
+          "chars": 287
+        },
+        {
+          "doc_id": "LN-2026-0008-bank_statement",
+          "kind": "bank_statement",
+          "path": "documents\\LN-2026-0008\\bank_statement.txt",
+          "chars": 572
+        },
+        {
+          "doc_id": "LN-2026-0008-credit_report",
+          "kind": "credit_report",
+          "path": "documents\\LN-2026-0008\\credit_report.txt",
+          "chars": 274
+        },
+        {
+          "doc_id": "LN-2026-0008-appraisal",
+          "kind": "appraisal",
+          "path": "documents\\LN-2026-0008\\appraisal.txt",
+          "chars": 268
+        },
+        {
+          "doc_id": "LN-2026-0008-title_commitment",
+          "kind": "title_commitment",
+          "path": "documents\\LN-2026-0008\\title_commitment.txt",
+          "chars": 240
+        },
+        {
+          "doc_id": "LN-2026-0008-hoi",
+          "kind": "hoi",
+          "path": "documents\\LN-2026-0008\\hoi.txt",
+          "chars": 266
+        },
+        {
+          "doc_id": "LN-2026-0008-flood_cert",
+          "kind": "flood_cert",
+          "path": "documents\\LN-2026-0008\\flood_cert.txt",
+          "chars": 225
+        },
+        {
+          "doc_id": "LN-2026-0008-loan_estimate",
+          "kind": "loan_estimate",
+          "path": "documents\\LN-2026-0008\\loan_estimate.txt",
+          "chars": 593
+        },
+        {
+          "doc_id": "LN-2026-0008-closing_disclosure",
+          "kind": "closing_disclosure",
+          "path": "documents\\LN-2026-0008\\closing_disclosure.txt",
+          "chars": 744
+        },
+        {
+          "doc_id": "LN-2026-0008-aus_findings",
+          "kind": "aus_findings",
+          "path": "documents\\LN-2026-0008\\aus_findings.txt",
+          "chars": 283
+        }
+      ]
+    },
+    {
+      "id": "LN-2026-0009",
+      "borrowers": "Carlos Mendez",
+      "metro": "San Antonio, TX",
+      "program": "VA",
+      "purpose": "Purchase",
+      "amount": 298000,
+      "property_value": 298000,
+      "fico": 701,
+      "ltv": 100.0,
+      "dti": 42.0,
+      "note_rate": 6.21,
+      "monthly_income": 6703.0,
+      "piti": 2255.26,
+      "other_debts": 560,
+      "conforming_limit": 832750,
+      "is_jumbo": false,
+      "documents": [
+        {
+          "doc_id": "LN-2026-0009-urla",
+          "kind": "urla",
+          "path": "documents\\LN-2026-0009\\urla.txt",
+          "chars": 852
+        },
+        {
+          "doc_id": "LN-2026-0009-id",
+          "kind": "id",
+          "path": "documents\\LN-2026-0009\\id.txt",
+          "chars": 196
+        },
+        {
+          "doc_id": "LN-2026-0009-w2",
+          "kind": "w2",
+          "path": "documents\\LN-2026-0009\\w2.txt",
+          "chars": 322
+        },
+        {
+          "doc_id": "LN-2026-0009-paystub",
+          "kind": "paystub",
+          "path": "documents\\LN-2026-0009\\paystub.txt",
+          "chars": 291
+        },
+        {
+          "doc_id": "LN-2026-0009-bank_statement",
+          "kind": "bank_statement",
+          "path": "documents\\LN-2026-0009\\bank_statement.txt",
+          "chars": 563
+        },
+        {
+          "doc_id": "LN-2026-0009-credit_report",
+          "kind": "credit_report",
+          "path": "documents\\LN-2026-0009\\credit_report.txt",
+          "chars": 278
+        },
+        {
+          "doc_id": "LN-2026-0009-appraisal",
+          "kind": "appraisal",
+          "path": "documents\\LN-2026-0009\\appraisal.txt",
+          "chars": 265
+        },
+        {
+          "doc_id": "LN-2026-0009-title_commitment",
+          "kind": "title_commitment",
+          "path": "documents\\LN-2026-0009\\title_commitment.txt",
+          "chars": 234
+        },
+        {
+          "doc_id": "LN-2026-0009-hoi",
+          "kind": "hoi",
+          "path": "documents\\LN-2026-0009\\hoi.txt",
+          "chars": 255
+        },
+        {
+          "doc_id": "LN-2026-0009-flood_cert",
+          "kind": "flood_cert",
+          "path": "documents\\LN-2026-0009\\flood_cert.txt",
+          "chars": 338
+        },
+        {
+          "doc_id": "LN-2026-0009-loan_estimate",
+          "kind": "loan_estimate",
+          "path": "documents\\LN-2026-0009\\loan_estimate.txt",
+          "chars": 590
+        },
+        {
+          "doc_id": "LN-2026-0009-closing_disclosure",
+          "kind": "closing_disclosure",
+          "path": "documents\\LN-2026-0009\\closing_disclosure.txt",
+          "chars": 741
+        },
+        {
+          "doc_id": "LN-2026-0009-aus_findings",
+          "kind": "aus_findings",
+          "path": "documents\\LN-2026-0009\\aus_findings.txt",
+          "chars": 292
+        },
+        {
+          "doc_id": "LN-2026-0009-coe",
+          "kind": "coe",
+          "path": "documents\\LN-2026-0009\\coe.txt",
+          "chars": 208
+        }
+      ]
+    },
+    {
+      "id": "LN-2026-0010",
+      "borrowers": "Grace Liu",
+      "metro": "Portland, OR",
+      "program": "Conv",
+      "purpose": "Purchase",
+      "amount": 468000,
+      "property_value": 570732,
+      "fico": 744,
+      "ltv": 82.0,
+      "dti": 39.0,
+      "note_rate": 6.67,
+      "monthly_income": 12086.58,
+      "piti": 3883.76,
+      "other_debts": 830,
+      "conforming_limit": 832750,
+      "is_jumbo": false,
+      "documents": [
+        {
+          "doc_id": "LN-2026-0010-urla",
+          "kind": "urla",
+          "path": "documents\\LN-2026-0010\\urla.txt",
+          "chars": 848
+        },
+        {
+          "doc_id": "LN-2026-0010-id",
+          "kind": "id",
+          "path": "documents\\LN-2026-0010\\id.txt",
+          "chars": 192
+        },
+        {
+          "doc_id": "LN-2026-0010-w2",
+          "kind": "w2",
+          "path": "documents\\LN-2026-0010\\w2.txt",
+          "chars": 323
+        },
+        {
+          "doc_id": "LN-2026-0010-paystub",
+          "kind": "paystub",
+          "path": "documents\\LN-2026-0010\\paystub.txt",
+          "chars": 324
+        },
+        {
+          "doc_id": "LN-2026-0010-bank_statement",
+          "kind": "bank_statement",
+          "path": "documents\\LN-2026-0010\\bank_statement.txt",
+          "chars": 559
+        },
+        {
+          "doc_id": "LN-2026-0010-credit_report",
+          "kind": "credit_report",
+          "path": "documents\\LN-2026-0010\\credit_report.txt",
+          "chars": 274
+        },
+        {
+          "doc_id": "LN-2026-0010-appraisal",
+          "kind": "appraisal",
+          "path": "documents\\LN-2026-0010\\appraisal.txt",
+          "chars": 262
+        },
+        {
+          "doc_id": "LN-2026-0010-title_commitment",
+          "kind": "title_commitment",
+          "path": "documents\\LN-2026-0010\\title_commitment.txt",
+          "chars": 227
+        },
+        {
+          "doc_id": "LN-2026-0010-hoi",
+          "kind": "hoi",
+          "path": "documents\\LN-2026-0010\\hoi.txt",
+          "chars": 251
+        },
+        {
+          "doc_id": "LN-2026-0010-flood_cert",
+          "kind": "flood_cert",
+          "path": "documents\\LN-2026-0010\\flood_cert.txt",
+          "chars": 227
+        },
+        {
+          "doc_id": "LN-2026-0010-loan_estimate",
+          "kind": "loan_estimate",
+          "path": "documents\\LN-2026-0010\\loan_estimate.txt",
+          "chars": 591
+        },
+        {
+          "doc_id": "LN-2026-0010-closing_disclosure",
+          "kind": "closing_disclosure",
+          "path": "documents\\LN-2026-0010\\closing_disclosure.txt",
+          "chars": 742
+        },
+        {
+          "doc_id": "LN-2026-0010-aus_findings",
+          "kind": "aus_findings",
+          "path": "documents\\LN-2026-0010\\aus_findings.txt",
+          "chars": 291
+        }
+      ]
+    },
+    {
+      "id": "LN-2026-0011",
+      "borrowers": "Priya Raman",
+      "metro": "Charlotte, NC",
+      "program": "Conv",
+      "purpose": "Purchase",
+      "amount": 385000,
+      "property_value": 427778,
+      "fico": 718,
+      "ltv": 90.0,
+      "dti": 41.0,
+      "note_rate": 6.67,
+      "monthly_income": 9485.88,
+      "piti": 3184.21,
+      "other_debts": 705,
+      "conforming_limit": 832750,
+      "is_jumbo": false,
+      "documents": [
+        {
+          "doc_id": "LN-2026-0011-urla",
+          "kind": "urla",
+          "path": "documents\\LN-2026-0011\\urla.txt",
+          "chars": 846
+        },
+        {
+          "doc_id": "LN-2026-0011-id",
+          "kind": "id",
+          "path": "documents\\LN-2026-0011\\id.txt",
+          "chars": 194
+        },
+        {
+          "doc_id": "LN-2026-0011-w2",
+          "kind": "w2",
+          "path": "documents\\LN-2026-0011\\w2.txt",
+          "chars": 321
+        },
+        {
+          "doc_id": "LN-2026-0011-paystub",
+          "kind": "paystub",
+          "path": "documents\\LN-2026-0011\\paystub.txt",
+          "chars": 288
+        },
+        {
+          "doc_id": "LN-2026-0011-bank_statement",
+          "kind": "bank_statement",
+          "path": "documents\\LN-2026-0011\\bank_statement.txt",
+          "chars": 561
+        },
+        {
+          "doc_id": "LN-2026-0011-credit_report",
+          "kind": "credit_report",
+          "path": "documents\\LN-2026-0011\\credit_report.txt",
+          "chars": 276
+        },
+        {
+          "doc_id": "LN-2026-0011-appraisal",
+          "kind": "appraisal",
+          "path": "documents\\LN-2026-0011\\appraisal.txt",
+          "chars": 263
+        },
+        {
+          "doc_id": "LN-2026-0011-title_commitment",
+          "kind": "title_commitment",
+          "path": "documents\\LN-2026-0011\\title_commitment.txt",
+          "chars": 230
+        },
+        {
+          "doc_id": "LN-2026-0011-hoi",
+          "kind": "hoi",
+          "path": "documents\\LN-2026-0011\\hoi.txt",
+          "chars": 253
+        },
+        {
+          "doc_id": "LN-2026-0011-flood_cert",
+          "kind": "flood_cert",
+          "path": "documents\\LN-2026-0011\\flood_cert.txt",
+          "chars": 228
+        },
+        {
+          "doc_id": "LN-2026-0011-loan_estimate",
+          "kind": "loan_estimate",
+          "path": "documents\\LN-2026-0011\\loan_estimate.txt",
+          "chars": 590
+        },
+        {
+          "doc_id": "LN-2026-0011-closing_disclosure",
+          "kind": "closing_disclosure",
+          "path": "documents\\LN-2026-0011\\closing_disclosure.txt",
+          "chars": 741
+        },
+        {
+          "doc_id": "LN-2026-0011-aus_findings",
+          "kind": "aus_findings",
+          "path": "documents\\LN-2026-0011\\aus_findings.txt",
+          "chars": 290
+        }
+      ]
+    },
+    {
+      "id": "LN-2026-0012",
+      "borrowers": "Marcus Bell",
+      "metro": "Las Vegas, NV",
+      "program": "FHA",
+      "purpose": "Purchase",
+      "amount": 355000,
+      "property_value": 367876,
+      "fico": 664,
+      "ltv": 96.5,
+      "dti": 49.0,
+      "note_rate": 6.29,
+      "monthly_income": 7938.71,
+      "piti": 2849.97,
+      "other_debts": 1040,
+      "conforming_limit": 832750,
+      "is_jumbo": false,
+      "documents": [
+        {
+          "doc_id": "LN-2026-0012-urla",
+          "kind": "urla",
+          "path": "documents\\LN-2026-0012\\urla.txt",
+          "chars": 851
+        },
+        {
+          "doc_id": "LN-2026-0012-id",
+          "kind": "id",
+          "path": "documents\\LN-2026-0012\\id.txt",
+          "chars": 194
+        },
+        {
+          "doc_id": "LN-2026-0012-w2",
+          "kind": "w2",
+          "path": "documents\\LN-2026-0012\\w2.txt",
+          "chars": 322
+        },
+        {
+          "doc_id": "LN-2026-0012-paystub",
+          "kind": "paystub",
+          "path": "documents\\LN-2026-0012\\paystub.txt",
+          "chars": 292
+        },
+        {
+          "doc_id": "LN-2026-0012-bank_statement",
+          "kind": "bank_statement",
+          "path": "documents\\LN-2026-0012\\bank_statement.txt",
+          "chars": 561
+        },
+        {
+          "doc_id": "LN-2026-0012-credit_report",
+          "kind": "credit_report",
+          "path": "documents\\LN-2026-0012\\credit_report.txt",
+          "chars": 279
+        },
+        {
+          "doc_id": "LN-2026-0012-appraisal",
+          "kind": "appraisal",
+          "path": "documents\\LN-2026-0012\\appraisal.txt",
+          "chars": 263
+        },
+        {
+          "doc_id": "LN-2026-0012-title_commitment",
+          "kind": "title_commitment",
+          "path": "documents\\LN-2026-0012\\title_commitment.txt",
+          "chars": 230
+        },
+        {
+          "doc_id": "LN-2026-0012-hoi",
+          "kind": "hoi",
+          "path": "documents\\LN-2026-0012\\hoi.txt",
+          "chars": 253
+        },
+        {
+          "doc_id": "LN-2026-0012-flood_cert",
+          "kind": "flood_cert",
+          "path": "documents\\LN-2026-0012\\flood_cert.txt",
+          "chars": 228
+        },
+        {
+          "doc_id": "LN-2026-0012-loan_estimate",
+          "kind": "loan_estimate",
+          "path": "documents\\LN-2026-0012\\loan_estimate.txt",
+          "chars": 590
+        },
+        {
+          "doc_id": "LN-2026-0012-closing_disclosure",
+          "kind": "closing_disclosure",
+          "path": "documents\\LN-2026-0012\\closing_disclosure.txt",
+          "chars": 741
+        },
+        {
+          "doc_id": "LN-2026-0012-aus_findings",
+          "kind": "aus_findings",
+          "path": "documents\\LN-2026-0012\\aus_findings.txt",
+          "chars": 293
+        },
+        {
+          "doc_id": "LN-2026-0012-fha_case",
+          "kind": "fha_case",
+          "path": "documents\\LN-2026-0012\\fha_case.txt",
+          "chars": 177
+        }
+      ]
+    }
+  ]
+}

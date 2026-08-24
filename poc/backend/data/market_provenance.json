@@ -1,0 +1,43 @@
+{
+  "researched": [
+    [
+      "Conforming loan limits 2026",
+      "FHFA, effective 2026-01-01"
+    ],
+    [
+      "FHA floor / ceiling 2026",
+      "HUD-25-145, effective 2026-01-01"
+    ],
+    [
+      "County limits: San Diego, Boston, Seattle",
+      "FHFA county tables 2026"
+    ],
+    [
+      "30y / 15y fixed rates",
+      "Freddie Mac PMMS, week of 2026-08-13"
+    ],
+    [
+      "FHA MIP, VA funding fee",
+      "HUD / VA published 2026 schedules"
+    ],
+    [
+      "National median price",
+      "Redfin, June 2026"
+    ],
+    [
+      "Austin median price",
+      "Austin market report, Feb 2026"
+    ]
+  ],
+  "estimated": [
+    [
+      "FHA / VA / Jumbo note rates",
+      "conventional +/- conventional spread"
+    ],
+    [
+      "Metro median prices except Austin",
+      "relative positioning vs national median"
+    ]
+  ],
+  "as_of": "2026-08-20"
+}

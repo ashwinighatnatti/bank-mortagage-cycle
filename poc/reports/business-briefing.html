@@ -1,0 +1,543 @@
+<title>AI-Native Mortgage</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&family=Mulish:wght@400;500;600;700&display=swap');
+
+  :root {
+    --bg: #F7F8FB;
+    --surface: #FFFFFF;
+    --surface-alt: #EDF0F6;
+    --ink: #0A2140;
+    --ink-soft: #3C4E74;
+    --ink-mute: #6E80A6;
+    --border: #E1E6EE;
+    --cover-bg: #0A2140;
+    --cover-ink: #F4F6FB;
+    --coral: #F06048;
+    --coral-strong: #D84B34;
+    --teal: #189078;
+    --teal-soft: #E9F6F2;
+    --amber: #F09048;
+    --amber-soft: #FDF1E6;
+    --gold: #F4CB4A;
+    --shadow-sm: 0 1px 3px rgba(10,33,64,.08), 0 1px 2px rgba(10,33,64,.04);
+    --shadow-md: 0 6px 18px rgba(10,33,64,.10), 0 2px 6px rgba(10,33,64,.05);
+    --font-display: "Poppins", system-ui, sans-serif;
+    --font-body: "Mulish", system-ui, -apple-system, sans-serif;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0A1220;
+      --surface: #101A2C;
+      --surface-alt: #0D1727;
+      --ink: #ECF1FA;
+      --ink-soft: #B7C4E2;
+      --ink-mute: #8493B8;
+      --border: #223257;
+      --coral: #FF8266;
+      --coral-strong: #F06048;
+      --teal: #34B296;
+      --teal-soft: rgba(52,178,150,.14);
+      --amber: #F5A867;
+      --amber-soft: rgba(245,168,103,.14);
+      --gold: #F4CB4A;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,.35), 0 1px 2px rgba(0,0,0,.2);
+      --shadow-md: 0 6px 18px rgba(0,0,0,.4), 0 2px 6px rgba(0,0,0,.25);
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0A1220;
+    --surface: #101A2C;
+    --surface-alt: #0D1727;
+    --ink: #ECF1FA;
+    --ink-soft: #B7C4E2;
+    --ink-mute: #8493B8;
+    --border: #223257;
+    --coral: #FF8266;
+    --coral-strong: #F06048;
+    --teal: #34B296;
+    --teal-soft: rgba(52,178,150,.14);
+    --amber: #F5A867;
+    --amber-soft: rgba(245,168,103,.14);
+    --gold: #F4CB4A;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,.35), 0 1px 2px rgba(0,0,0,.2);
+    --shadow-md: 0 6px 18px rgba(0,0,0,.4), 0 2px 6px rgba(0,0,0,.25);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-body);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3 { font-family: var(--font-display); margin: 0; letter-spacing: -0.01em; text-wrap: balance; color: var(--ink); }
+  p { margin: 0; }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 0 28px; }
+
+  /* ---------- cover ---------- */
+  .cover {
+    background: var(--cover-bg);
+    color: var(--cover-ink);
+    padding: 64px 0 52px;
+  }
+  .cover .eyebrow {
+    font-family: var(--font-display);
+    font-size: 12.5px;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--coral);
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin-bottom: 22px;
+  }
+  .cover .eyebrow .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--coral); }
+  .cover h1 { font-size: 40px; font-weight: 800; line-height: 1.14; max-width: 620px; }
+  .cover .lede {
+    margin-top: 16px;
+    max-width: 560px;
+    font-size: 16.5px;
+    color: #C7D2EC;
+    line-height: 1.65;
+  }
+
+  /* ---------- sections ---------- */
+  section { padding: 46px 0; }
+  section.alt { background: var(--surface-alt); }
+  .kicker {
+    font-family: var(--font-display);
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 10px;
+  }
+  h2.title { font-size: 26px; font-weight: 700; margin-bottom: 6px; }
+  .section-lede { color: var(--ink-soft); font-size: 15.5px; max-width: 640px; margin-top: 10px; line-height: 1.65; }
+
+  /* ---------- pipeline figure ---------- */
+  figure.pipeline { margin: 34px 0 8px; }
+  figure.pipeline svg { width: 100%; height: auto; display: block; }
+  figcaption {
+    margin-top: 14px;
+    font-size: 13px;
+    color: var(--ink-mute);
+    max-width: 640px;
+  }
+  .flow-note {
+    margin-top: 22px;
+    padding: 14px 18px;
+    background: var(--teal-soft);
+    border-left: 3px solid var(--teal);
+    border-radius: 8px;
+    font-size: 14.5px;
+    color: var(--ink-soft);
+  }
+  .flow-note strong { color: var(--ink); }
+
+  /* ---------- agent cards ---------- */
+  .agent-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 30px;
+  }
+  .agent-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: var(--shadow-sm);
+  }
+  .agent-card .role {
+    font-family: var(--font-display);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--teal);
+  }
+  .agent-card h3 { font-size: 18px; margin-top: 6px; }
+  .agent-card p { margin-top: 10px; font-size: 14.5px; color: var(--ink-soft); line-height: 1.6; }
+  .agent-card .boundary {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    font-size: 13px;
+    color: var(--ink-mute);
+  }
+  .agent-card .boundary b { color: var(--ink-soft); font-weight: 700; }
+
+  /* ---------- governance list ---------- */
+  .rule-list { margin-top: 28px; display: grid; gap: 14px; }
+  .rule-row {
+    display: grid;
+    grid-template-columns: 30px 1fr;
+    gap: 14px;
+    align-items: start;
+  }
+  .rule-row .mark {
+    width: 30px; height: 30px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-display); font-weight: 700; font-size: 13px;
+    background: var(--surface); border: 1.5px solid var(--teal); color: var(--teal);
+    flex-shrink: 0;
+  }
+  .rule-row .body-text { font-size: 15px; color: var(--ink-soft); line-height: 1.6; padding-top: 3px; }
+  .rule-row .body-text b { color: var(--ink); }
+
+  /* ---------- new-capability band ---------- */
+  .new-band {
+    border: 1.5px solid var(--gold);
+    background: linear-gradient(180deg, rgba(244,203,74,.10), rgba(244,203,74,.02));
+    border-radius: 16px;
+    padding: 28px 30px;
+    margin-top: 30px;
+  }
+  .new-tag {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-family: var(--font-display); font-size: 11px; font-weight: 700;
+    letter-spacing: .1em; text-transform: uppercase; color: #8A6A00;
+    background: var(--gold); padding: 4px 11px; border-radius: 999px;
+  }
+  .new-item { margin-top: 20px; display: grid; grid-template-columns: 1fr; gap: 18px; }
+  .new-item + .new-item { padding-top: 18px; border-top: 1px solid rgba(244,203,74,.35); }
+  .new-item h3 { font-size: 16.5px; }
+  .new-item p { margin-top: 6px; font-size: 14.5px; color: var(--ink-soft); line-height: 1.6; }
+
+  /* ---------- benefits ---------- */
+  .benefit-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-top: 30px;
+  }
+  .benefit {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 22px;
+  }
+  .benefit h3 { font-size: 15.5px; color: var(--coral-strong); }
+  .benefit p { margin-top: 8px; font-size: 14px; color: var(--ink-soft); line-height: 1.6; }
+
+  /* ---------- walkthrough ---------- */
+  .walkthrough {
+    margin-top: 28px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px 30px;
+    box-shadow: var(--shadow-sm);
+  }
+  .walkthrough .file-tag {
+    font-family: var(--font-display); font-weight: 700; font-size: 13px;
+    color: var(--ink-mute); letter-spacing: .04em;
+  }
+  .step-list { margin-top: 18px; display: grid; gap: 13px; }
+  .step {
+    display: grid; grid-template-columns: 20px 1fr; gap: 12px; font-size: 14.5px;
+    color: var(--ink-soft); line-height: 1.55;
+  }
+  .step .t { color: var(--ink-mute); font-family: var(--font-display); font-weight: 700; font-size: 12.5px; padding-top: 2px; }
+  .step b { color: var(--ink); }
+  .step.human .t { color: var(--amber); }
+  .step.auto .t { color: var(--teal); }
+
+  /* ---------- footer ---------- */
+  footer { padding: 40px 0 60px; }
+  footer p { font-size: 13.5px; color: var(--ink-mute); line-height: 1.7; max-width: 620px; }
+  footer .brandline {
+    margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--border);
+    font-family: var(--font-display); font-size: 12px; font-weight: 700;
+    letter-spacing: .08em; text-transform: uppercase; color: var(--ink-mute);
+  }
+
+  @media (max-width: 640px) {
+    .cover h1 { font-size: 30px; }
+    .agent-grid, .benefit-grid { grid-template-columns: 1fr; }
+  }
+</style>
+
+<div class="cover">
+  <div class="wrap">
+    <div class="eyebrow"><span class="dot"></span>Coforge &middot; AI-Native Mortgage</div>
+    <h1>Meet Your AI Loan Team</h1>
+    <p class="lede">
+      A business briefing on the AI system now speeding up loan review — what it does, where
+      people stay in control, and why it matters.
+    </p>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <div class="kicker">The problem</div>
+    <h2 class="title">A loan file is a lot to read, every single time</h2>
+    <p class="section-lede">
+      A single file can hold a dozen documents and hundreds of numbers that all have to agree
+      with each other and with the program's rules — income against the paystub, the paystub
+      against the W-2, the appraisal against the contract, the identity documents against each
+      other. Checking all of it by hand is slow, repetitive, and exactly the kind of task where
+      a tired reviewer misses a line on a Friday afternoon. That delay is what this system is
+      built to close, without lowering the bar on what gets checked.
+    </p>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <div class="kicker">How it works</div>
+    <h2 class="title">A file moves through five checkpoints</h2>
+    <p class="section-lede">
+      Four AI agents do the reading and checking. Every one of them has one job and cannot do
+      anyone else's — the agent that finds a problem is never the one allowed to fix it.
+    </p>
+
+    <figure class="pipeline">
+      <svg viewBox="0 0 900 250" role="img" aria-label="A loan file flows through Document Intake, then Validation, then splits: low-risk items go to the automatic Processing lane while items needing judgment go to a human review lane with supervisor sign-off on the most sensitive ones. Both lanes rejoin at the Summarizer, which hands the file to the underwriter for a decision.">
+        <defs>
+          <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+            <path d="M0,0 L10,5 L0,10 z" fill="currentColor" />
+          </marker>
+        </defs>
+
+        <!-- Intake -->
+        <rect x="6" y="96" width="118" height="58" rx="10" fill="none" stroke="currentColor" stroke-width="1.4" />
+        <text x="65" y="120" text-anchor="middle" font-family="Poppins, sans-serif" font-size="12.5" font-weight="700" fill="currentColor">Document</text>
+        <text x="65" y="136" text-anchor="middle" font-family="Poppins, sans-serif" font-size="12.5" font-weight="700" fill="currentColor">Intake</text>
+
+        <!-- arrow to validation -->
+        <line x1="124" y1="125" x2="182" y2="125" stroke="currentColor" stroke-width="1.4" marker-end="url(#arrow)" />
+
+        <!-- Validation -->
+        <rect x="188" y="96" width="118" height="58" rx="10" fill="none" stroke="currentColor" stroke-width="1.4" />
+        <text x="247" y="130" text-anchor="middle" font-family="Poppins, sans-serif" font-size="12.5" font-weight="700" fill="currentColor">Validation</text>
+
+        <!-- fork lines -->
+        <path d="M306,125 C330,125 330,52 356,52" fill="none" stroke="var(--teal)" stroke-width="1.4" marker-end="url(#arrow)" />
+        <path d="M306,125 C330,125 330,198 356,198" fill="none" stroke="var(--amber)" stroke-width="1.4" marker-end="url(#arrow)" />
+        <text x="322" y="82" text-anchor="middle" font-family="Mulish, sans-serif" font-size="10.5" fill="var(--teal)">low-risk, confident</text>
+        <text x="322" y="188" text-anchor="middle" font-family="Mulish, sans-serif" font-size="10.5" fill="var(--amber)">needs judgment</text>
+
+        <!-- auto lane -->
+        <rect x="362" y="23" width="150" height="58" rx="10" fill="var(--teal-soft)" stroke="var(--teal)" stroke-width="1.4" />
+        <text x="437" y="47" text-anchor="middle" font-family="Poppins, sans-serif" font-size="12.5" font-weight="700" fill="currentColor">Processing</text>
+        <text x="437" y="63" text-anchor="middle" font-family="Mulish, sans-serif" font-size="10.5" fill="currentColor">auto-fixes it</text>
+
+        <!-- human lane -->
+        <rect x="362" y="169" width="150" height="58" rx="10" fill="var(--amber-soft)" stroke="var(--amber)" stroke-width="1.4" />
+        <text x="437" y="193" text-anchor="middle" font-family="Poppins, sans-serif" font-size="12.5" font-weight="700" fill="currentColor">A person</text>
+        <text x="437" y="209" text-anchor="middle" font-family="Mulish, sans-serif" font-size="10.5" fill="currentColor">reviews it</text>
+
+        <!-- merge lines -->
+        <path d="M512,52 C536,52 536,125 562,125" fill="none" stroke="var(--teal)" stroke-width="1.4" marker-end="url(#arrow)" />
+        <path d="M512,198 C536,198 536,125 562,125" fill="none" stroke="var(--amber)" stroke-width="1.4" marker-end="url(#arrow)" />
+
+        <!-- Summarizer -->
+        <rect x="568" y="96" width="118" height="58" rx="10" fill="none" stroke="currentColor" stroke-width="1.4" />
+        <text x="627" y="120" text-anchor="middle" font-family="Poppins, sans-serif" font-size="12.5" font-weight="700" fill="currentColor">Summarizer</text>
+        <text x="627" y="136" text-anchor="middle" font-family="Mulish, sans-serif" font-size="10.5" fill="currentColor">writes the brief</text>
+
+        <line x1="686" y1="125" x2="744" y2="125" stroke="currentColor" stroke-width="1.4" marker-end="url(#arrow)" />
+
+        <!-- Underwriter -->
+        <rect x="750" y="90" width="144" height="70" rx="10" fill="var(--surface)" stroke="var(--coral)" stroke-width="1.8" />
+        <text x="822" y="118" text-anchor="middle" font-family="Poppins, sans-serif" font-size="12.5" font-weight="700" fill="currentColor">Underwriter</text>
+        <text x="822" y="134" text-anchor="middle" font-family="Mulish, sans-serif" font-size="10.5" fill="currentColor">decides the file</text>
+        <text x="822" y="149" text-anchor="middle" font-family="Mulish, sans-serif" font-size="10" fill="var(--coral)">a person, always</text>
+      </svg>
+      <figcaption>
+        Every finding splits into two lanes after Validation: the confident, low-risk ones are
+        auto-fixed by Processing, and anything needing judgment goes to a person — with a
+        supervisor's sign-off required on the most sensitive items. Both lanes lead to the same
+        place: a written brief, and a person making the final call.
+      </figcaption>
+    </figure>
+
+    <div class="flow-note">
+      <strong>Nothing here waits on a button anymore.</strong> Picking up a file to work on is
+      what starts the checkpoints that file still needs — see &ldquo;What&rsquo;s new&rdquo; below.
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="kicker">Meet the agents</div>
+    <h2 class="title">Four specialists, one job each</h2>
+    <p class="section-lede">
+      Each agent is deliberately narrow. That's not a limitation — it's the safeguard: the same
+      agent can never both raise a finding and clear it, so nothing gets to mark its own work.
+    </p>
+
+    <div class="agent-grid">
+      <div class="agent-card">
+        <div class="role">Checkpoint 1</div>
+        <h3>Document Intake Agent</h3>
+        <p>Reads every paystub, W-2, bank statement, appraisal, and disclosure in the file and
+          pulls the key numbers — income, assets, property value, identity — into one place.</p>
+        <div class="boundary"><b>Can't do:</b> decide anything about the loan. It only reads and records.</div>
+      </div>
+      <div class="agent-card">
+        <div class="role">Checkpoint 2</div>
+        <h3>Validation Agent</h3>
+        <p>Checks the file's numbers against the actual rules for that loan program — debt
+          ratios, loan-to-value, income documentation — and flags anything that doesn't line up,
+          with its reasoning attached.</p>
+        <div class="boundary"><b>Can't do:</b> fix anything it finds. It can only flag.</div>
+      </div>
+      <div class="agent-card">
+        <div class="role">Checkpoint 3</div>
+        <h3>Processing Agent</h3>
+        <p>Clears the simple, low-risk findings automatically and can order routine services
+          like an appraisal or a title search.</p>
+        <div class="boundary"><b>Can't do:</b> touch anything involving money, a borrower, or
+          judgment without a person confirming it first.</div>
+      </div>
+      <div class="agent-card">
+        <div class="role">Checkpoint 4</div>
+        <h3>Summarizer Agent</h3>
+        <p>Reads the whole file and everything the other three agents found, then writes a
+          short, plain-English brief for the underwriter: what's solid, what to look at twice.</p>
+        <div class="boundary"><b>Can't do:</b> change anything in the file. It only reports.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <div class="kicker">Who's keeping watch</div>
+    <h2 class="title">The guardrails, not the prompts</h2>
+    <p class="section-lede">
+      None of the promises below rely on an agent choosing to behave. Each one is a fixed rule
+      the system enforces on every action, automatically.
+    </p>
+
+    <div class="rule-list">
+      <div class="rule-row">
+        <div class="mark">1</div>
+        <div class="body-text"><b>Confidence doesn't decide alone.</b> The AI reports how sure
+          it is; a separate, fixed set of lending rules — not the AI itself — decides whether
+          that's enough to act without a person.</div>
+      </div>
+      <div class="rule-row">
+        <div class="mark">2</div>
+        <div class="body-text"><b>Some things always go to a person</b>, no matter how confident
+          the AI is: income surprises, debt or value breaches, anything about someone's identity
+          or the title of the property, and anything that looks like an attempt to manipulate
+          the system.</div>
+      </div>
+      <div class="rule-row">
+        <div class="mark">3</div>
+        <div class="body-text"><b>A second pair of eyes on the sensitive calls.</b> For the most
+          sensitive findings, an analyst can only propose a fix — a supervisor has to approve it
+          before it takes effect.</div>
+      </div>
+      <div class="rule-row">
+        <div class="mark">4</div>
+        <div class="body-text"><b>Every action is written down, permanently.</b> Whether it was
+          the AI or a person, every step is recorded in a record that can't be edited or
+          deleted — so anyone can see exactly what happened to a file, and when.</div>
+      </div>
+      <div class="rule-row">
+        <div class="mark">5</div>
+        <div class="body-text"><b>Each person sees only their own job.</b> An analyst works
+          their own queue, only a supervisor approves sign-offs, only an underwriter renders a
+          decision — enforced by the system itself, not just hidden from the screen.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="kicker">What's new</div>
+    <h2 class="title">Two changes that remove busywork</h2>
+
+    <div class="new-band">
+      <span class="new-tag">Just added</span>
+      <div class="new-item">
+        <h3>Picking up a file starts the work</h3>
+        <p>There used to be an extra step: pick the file, then separately press a button to run
+          the agents. Now, opening a file runs exactly the checkpoints it still needs — nothing
+          more. A file that's already clean, or already sitting with a person, is left alone
+          instead of being re-checked for no reason.</p>
+      </div>
+      <div class="new-item">
+        <h3>The AI's write-up no longer disappears</h3>
+        <p>The Summarizer's brief used to only exist for the moment it was written, then vanish.
+          It's now saved with the file and shown on the underwriter's screen — a short preview
+          by default, with the full write-up one click away when it's needed.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <div class="kicker">A file, start to finish</div>
+    <h2 class="title">What this looks like on one loan</h2>
+
+    <div class="walkthrough">
+      <div class="file-tag">Conventional purchase &middot; $412,000</div>
+      <div class="step-list">
+        <div class="step auto"><span class="t">01</span><span><b>Opened.</b> Someone selects the file. The AI checkpoints start on their own.</span></div>
+        <div class="step auto"><span class="t">02</span><span><b>Read.</b> Income, assets, and property details are pulled from thirteen documents in under a minute.</span></div>
+        <div class="step auto"><span class="t">03</span><span><b>Checked.</b> Every number is compared against the program's rules. One thing looks off: a bank deposit that's slightly larger than usual.</span></div>
+        <div class="step human"><span class="t">04</span><span><b>Routed.</b> That finding needs judgment, so it goes to an analyst's queue instead of being auto-cleared.</span></div>
+        <div class="step human"><span class="t">05</span><span><b>Reviewed.</b> The analyst confirms the deposit is a payroll deposit and clears it.</span></div>
+        <div class="step auto"><span class="t">06</span><span><b>Summarized.</b> A short brief is written and saved: what was checked, what was found, what was cleared and how.</span></div>
+        <div class="step auto"><span class="t">07</span><span><b>Decided.</b> The underwriter opens a file that's already been read, checked, and explained — and approves it.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="kicker">The benefit, in short</div>
+    <h2 class="title">What changes for the people doing the work</h2>
+
+    <div class="benefit-grid">
+      <div class="benefit">
+        <h3>Files move faster</h3>
+        <p>A clean file reaches the underwriter in minutes, already read and checked — instead
+          of sitting in a queue until someone has time to open it.</p>
+      </div>
+      <div class="benefit">
+        <h3>The same checks, every time</h3>
+        <p>Every file gets the same rules applied the same way, whether it's the first file of
+          the day or the fortieth.</p>
+      </div>
+      <div class="benefit">
+        <h3>Judgment stays with people</h3>
+        <p>The AI only acts on the mechanical, low-risk items. Anything that requires
+          experience or discretion still goes to a person, by design.</p>
+      </div>
+      <div class="benefit">
+        <h3>Nothing is hard to explain later</h3>
+        <p>Every action — AI or human — is on the record. If a regulator or an auditor asks
+          "what happened on this file," the answer is already written down.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>
+      This covers the first slice of the loan lifecycle — intake through the underwriting
+      decision. The same approach is planned to extend to closing, funding, and post-closing
+      review as the system grows.
+    </p>
+    <div class="brandline">Coforge &middot; AI-Native Mortgage &middot; built on Claude, Anthropic's AI model</div>
+  </div>
+</footer>
