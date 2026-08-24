@@ -1,0 +1,66 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+# Tests mock the Anthropic client (see poc/backend/tests/test_agents.py) — no
+# real Foundry key or network access is needed. FOUNDRY_API_KEY only has to
+# satisfy pydantic-settings' min_length validation, so a dummy value is used
+# below rather than a repo secret.
+env:
+  FOUNDRY_API_KEY: ci-placeholder-key
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: poc/backend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: pip install --no-deps -r requirements-dev.lock.txt
+
+      - name: Generate synthetic data
+        working-directory: poc
+        run: |
+          python scripts/generate_synthetic_data.py
+          python scripts/verify_synthetic_data.py
+
+      - name: Run tests
+        run: pytest
+
+  frontend:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: poc/frontend
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: poc/frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type check
+        run: npm run typecheck
+
+      - name: Run tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
