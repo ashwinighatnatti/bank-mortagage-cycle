@@ -39,7 +39,7 @@ Full setup, architecture, and design rationale live in
 [`poc/README.md`](poc/README.md). Quick start:
 
 ### Prerequisites
-- Python 3.11+
+- Python 3.14 (the backend lock file and Docker image are verified against it)
 - Node.js 18+
 - A Claude deployment on Microsoft Foundry (API key + endpoint)
 
