@@ -1,0 +1,21 @@
+# Normalize all text files to LF in the repo; Git still checks them out
+# using each platform's native line endings unless overridden below.
+* text=auto eol=lf
+
+# Shell scripts must keep LF even on Windows checkouts — they run inside
+# Linux containers (see poc/docker/entrypoint.sh) and CRLF breaks them.
+*.sh text eol=lf
+
+# Binary files — do not touch line endings or diff as text.
+*.png binary
+*.bmp binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.woff binary
+*.woff2 binary
+*.db binary
+*.db-wal binary
+*.db-shm binary
